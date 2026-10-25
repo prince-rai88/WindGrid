@@ -91,7 +91,7 @@ export const WindDotFlowBackground = () => {
       map: dotTexture,
       transparent: true,
       opacity: 0.22, // Low opacity as explicitly requested
-      color: 0xffffff,
+      color: 0xd8eaf2,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
