@@ -10,39 +10,41 @@ export const Navbar = ({
   setActiveTab,
 }) => {
   return (
-    <div className="apple-nav-wrapper">
-      <header className="apple-nav">
+    <div className="nav-glass-container">
+      <header className="nav-glass-bar">
         {/* Brand */}
-        <div className="apple-brand">
-          <div className="apple-logo-badge">
-            <Wind size={15} strokeWidth={2.2} />
+        <div className="brand-wrap">
+          <div className="brand-icon-jewel">
+            <Wind size={16} strokeWidth={2.4} />
           </div>
-          <span className="apple-brand-title">WindGrid</span>
-          <span className="apple-brand-tag">UK Wind</span>
+          <div className="brand-title">
+            <span>WindGrid</span>
+            <span className="brand-tag-jewel">UK Power</span>
+          </div>
         </div>
 
-        {/* Minimal Pill Segmented Navigation */}
-        <nav className="apple-tabs">
+        {/* Segmented Pill Tabs */}
+        <nav className="tabs-pill-wrap">
           <button
-            className={`apple-tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
+            className={`tab-pill-btn ${activeTab === 'overview' ? 'active' : ''}`}
             onClick={() => setActiveTab('overview')}
           >
             Overview
           </button>
           <button
-            className={`apple-tab-btn ${activeTab === 'accuracy' ? 'active' : ''}`}
+            className={`tab-pill-btn ${activeTab === 'accuracy' ? 'active' : ''}`}
             onClick={() => setActiveTab('accuracy')}
           >
-            Accuracy
+            Forecast Accuracy
           </button>
           <button
-            className={`apple-tab-btn ${activeTab === 'history' ? 'active' : ''}`}
+            className={`tab-pill-btn ${activeTab === 'history' ? 'active' : ''}`}
             onClick={() => setActiveTab('history')}
           >
             January 2026
           </button>
           <button
-            className={`apple-tab-btn ${activeTab === 'versions' ? 'active' : ''}`}
+            className={`tab-pill-btn ${activeTab === 'versions' ? 'active' : ''}`}
             onClick={() => setActiveTab('versions')}
           >
             Intraday Runs
@@ -50,13 +52,13 @@ export const Navbar = ({
         </nav>
 
         {/* Floating Controls */}
-        <div className="apple-nav-controls">
-          {/* Quick Date Shortcuts */}
-          <div style={{ display: 'flex', gap: '2px' }}>
+        <div className="controls-glass-group">
+          {/* Quick Date Chips */}
+          <div style={{ display: 'flex', gap: '3px' }}>
             {['2026-01-01', '2026-01-15', '2026-01-31'].map((dt) => (
               <button
                 key={dt}
-                className={`apple-quick-btn ${decisionDate === dt ? 'active' : ''}`}
+                className={`quick-chip ${decisionDate === dt ? 'active' : ''}`}
                 onClick={() => setDecisionDate(dt)}
                 title={`Select ${dt}`}
               >
@@ -66,11 +68,11 @@ export const Navbar = ({
           </div>
 
           {/* Date Picker */}
-          <div className="apple-pill-control">
-            <Calendar size={13} color="#2d6a4f" />
+          <div className="control-pill">
+            <Calendar size={13} color="#0284c7" />
             <input
               type="date"
-              className="apple-input mono"
+              className="mono"
               value={decisionDate}
               min="2026-01-01"
               max="2026-01-31"
@@ -81,10 +83,9 @@ export const Navbar = ({
           </div>
 
           {/* Cutoff Selector */}
-          <div className="apple-pill-control">
-            <Clock size={13} color="#475569" />
+          <div className="control-pill">
+            <Clock size={13} color="#059669" />
             <select
-              className="apple-select"
               value={cutoffTime}
               onChange={(e) => setCutoffTime(e.target.value)}
             >

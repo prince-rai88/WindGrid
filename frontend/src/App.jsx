@@ -63,8 +63,8 @@ export function App() {
   };
 
   return (
-    <div className="app-container">
-      {/* Apple-style Floating Liquid Glass Navbar */}
+    <div className="rich-glass-app">
+      {/* Floating Rich Glass Navbar */}
       <Navbar
         decisionDate={decisionDate}
         setDecisionDate={setDecisionDate}
@@ -74,18 +74,18 @@ export function App() {
         setActiveTab={setActiveTab}
       />
 
-      {/* Main Content View */}
-      <main className="apple-content">
+      {/* Main Glass Canvas */}
+      <main className="main-canvas">
         {error && (
           <div
             style={{
-              padding: '14px 20px',
-              background: 'rgba(239, 68, 68, 0.06)',
-              border: '1px solid rgba(239, 68, 68, 0.15)',
+              padding: '16px 22px',
+              background: 'rgba(239, 68, 68, 0.08)',
+              border: '1px solid rgba(239, 68, 68, 0.25)',
               borderRadius: 'var(--radius-md)',
               color: '#b91c1c',
               fontSize: '13px',
-              fontWeight: 500,
+              fontWeight: 600,
             }}
           >
             {error}
@@ -93,10 +93,9 @@ export function App() {
         )}
 
         {loading && (
-          <div className="state-box">
-            <div className="apple-spinner" />
-            <span style={{ color: '#64748b', fontSize: '13px' }}>
-              Updating forecast intelligence...
+          <div className="glass-panel-rich" style={{ textAlign: 'center', padding: '60px' }}>
+            <span style={{ color: '#0284c7', fontWeight: 600, fontSize: '14px' }}>
+              Updating Elexon forecast intelligence...
             </span>
           </div>
         )}
@@ -121,28 +120,28 @@ export function App() {
         )}
       </main>
 
-      {/* Minimal Footer */}
-      <footer className="apple-footer">
+      {/* Footer */}
+      <footer className="footer-glass-bar">
         <div>
           <span>WindGrid • UK National Wind Generation Forecasting & Procurement Intelligence</span>
         </div>
 
-        <div style={{ display: 'flex', gap: '18px' }}>
+        <div style={{ display: 'flex', gap: '20px' }}>
           <a
             href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/FUELHH/stream"
             target="_blank"
             rel="noreferrer"
-            className="footer-link"
+            className="footer-link-rich"
           >
-            Elexon FUELHH
+            Elexon FUELHH Stream ↗
           </a>
           <a
             href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/WINDFOR/stream"
             target="_blank"
             rel="noreferrer"
-            className="footer-link"
+            className="footer-link-rich"
           >
-            Elexon WINDFOR
+            Elexon WINDFOR Stream ↗
           </a>
         </div>
       </footer>

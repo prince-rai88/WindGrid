@@ -13,6 +13,7 @@ import {
   ReferenceLine,
   Cell,
 } from 'recharts';
+import { Target, Activity, Compass } from 'lucide-react';
 
 const CustomAccuracyTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
@@ -21,37 +22,37 @@ const CustomAccuracyTooltip = ({ active, payload }) => {
     const isUnder = data.error !== null && data.error < 0;
 
     return (
-      <div className="apple-tooltip">
-        <div className="tooltip-title">
-          SP {data.settlementPeriod} • {data.localTimeDisplay}
+      <div className="glass-tooltip-rich">
+        <div className="tooltip-time-rich">
+          SP {data.settlementPeriod} • {data.localTimeDisplay} London
         </div>
-        <div className="tooltip-row">
-          <span>Forecast:</span>
-          <strong className="tabular" style={{ color: '#2d6a4f' }}>
+        <div className="tooltip-val-row">
+          <span style={{ color: '#0284c7', fontWeight: 600 }}>Forecast:</span>
+          <strong className="tabular" style={{ color: '#0284c7' }}>
             {data.forecastGeneration !== null ? `${data.forecastGeneration.toLocaleString()} MW` : '—'}
           </strong>
         </div>
-        <div className="tooltip-row">
-          <span>Actual Outturn:</span>
-          <strong className="tabular" style={{ color: '#0f172a' }}>
+        <div className="tooltip-val-row">
+          <span style={{ color: '#059669', fontWeight: 600 }}>Actual Outturn:</span>
+          <strong className="tabular" style={{ color: '#059669' }}>
             {data.actualGeneration !== null ? `${data.actualGeneration.toLocaleString()} MW` : '—'}
           </strong>
         </div>
         {data.error !== null && (
           <div
-            className="tooltip-row"
+            className="tooltip-val-row"
             style={{
               marginTop: '6px',
-              borderTop: '1px solid rgba(0, 0, 0, 0.06)',
+              borderTop: '1px solid rgba(0, 0, 0, 0.08)',
               paddingTop: '4px',
             }}
           >
-            <span style={{ color: isOver ? '#c2410c' : isUnder ? '#0f766e' : '#64748b' }}>
+            <span style={{ color: isOver ? '#d97706' : isUnder ? '#0284c7' : '#64748b', fontWeight: 600 }}>
               Signed Error:
             </span>
             <strong
               className="tabular"
-              style={{ color: isOver ? '#c2410c' : isUnder ? '#0f766e' : '#0f172a' }}
+              style={{ color: isOver ? '#d97706' : isUnder ? '#0284c7' : '#0f172a' }}
             >
               {data.error > 0 ? `+${data.error.toLocaleString()}` : data.error.toLocaleString()} MW
             </strong>
@@ -68,11 +69,11 @@ export const AccuracyPage = ({ data }) => {
 
   if (!data.isAvailable) {
     return (
-      <div className="state-box">
-        <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#0f172a' }}>
+      <div className="glass-panel-rich" style={{ textAlign: 'center', padding: '60px 24px' }}>
+        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a' }}>
           Data Unavailable for {data.deliveryDate}
         </h2>
-        <p style={{ color: '#64748b', fontSize: '14px', maxWidth: '440px' }}>
+        <p style={{ color: '#64748b', fontSize: '14px', maxWidth: '440px', margin: '8px auto 0' }}>
           Either forecast or actual generation data from Elexon BMRS is missing for this delivery date. In accordance with strict auditing standards, no fabricated values are substituted.
         </p>
       </div>
@@ -82,127 +83,144 @@ export const AccuracyPage = ({ data }) => {
   const isOver = data.bias !== null && data.bias > 0;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '26px' }}>
       {/* Header Context */}
-      <div className="page-header">
-        <div className="page-header-text">
+      <div className="page-intro">
+        <div className="page-title-wrap">
           <h1>Forecast Accuracy Analysis</h1>
           <p>
-            Quantitative error evaluation of day-ahead forecasts against actual outturn wind generation for delivery on{' '}
+            Quantitative evaluation comparing day-ahead forecasts against actual outturn wind generation for delivery on{' '}
             <strong>{data.deliveryDate}</strong>.
           </p>
         </div>
 
-        <div className="meta-pill-group">
-          <div className="meta-pill">
-            <span>Evaluated:</span>
+        <div className="jewel-pill-row">
+          <div className="jewel-pill">
+            <span style={{ color: '#059669' }}>●</span>
+            <span>Matched Coverage:</span>
             <strong>{data.matchedPeriods} / {data.totalPeriods} periods ({data.coveragePercent}%)</strong>
           </div>
-          <div className="meta-pill">
+          <div className="jewel-pill">
+            <span style={{ color: '#0284c7' }}>●</span>
             <span>Cutoff:</span>
             <strong>{data.decisionCutoffDisplay || '11:00 London'}</strong>
           </div>
         </div>
       </div>
 
-      {/* 3 Core Metric Cards */}
-      <div className="stat-strip">
-        <div className="stat-card">
-          <div className="stat-label">Mean Absolute Error (MAE)</div>
-          <div className="stat-value-group">
-            <span className="stat-number tabular">
+      {/* 3 Core Metric Cards with Jewel Accents */}
+      <div className="metric-grid-rich">
+        <div className="metric-card-rich">
+          <div className="card-top-icon icon-cyan">
+            <Target size={18} strokeWidth={2.4} />
+          </div>
+          <div className="card-label-rich">Mean Absolute Error (MAE)</div>
+          <div className="card-value-row">
+            <span className="card-number-rich tabular" style={{ color: '#0284c7' }}>
               {data.mae !== null ? data.mae.toLocaleString() : '—'}
             </span>
-            <span className="stat-unit">MW</span>
+            <span className="card-unit-rich">MW</span>
           </div>
-          <div className="stat-subtext">Average magnitude of forecast error</div>
+          <div className="card-sub-rich">Average absolute error magnitude</div>
         </div>
 
-        <div className="stat-card">
-          <div className="stat-label">Root Mean Squared Error (RMSE)</div>
-          <div className="stat-value-group">
-            <span className="stat-number tabular">
+        <div className="metric-card-rich">
+          <div className="card-top-icon icon-indigo">
+            <Activity size={18} strokeWidth={2.4} />
+          </div>
+          <div className="card-label-rich">Root Mean Squared Error (RMSE)</div>
+          <div className="card-value-row">
+            <span className="card-number-rich tabular" style={{ color: '#4f46e5' }}>
               {data.rmse !== null ? data.rmse.toLocaleString() : '—'}
             </span>
-            <span className="stat-unit">MW</span>
+            <span className="card-unit-rich">MW</span>
           </div>
-          <div className="stat-subtext">Penalizes large forecast excursions</div>
+          <div className="card-sub-rich">Penalizes large forecast excursions</div>
         </div>
 
-        <div className="stat-card">
-          <div className="stat-label">Forecast Bias (Mean Signed Error)</div>
-          <div className="stat-value-group">
+        <div className="metric-card-rich">
+          <div className="card-top-icon icon-amber">
+            <Compass size={18} strokeWidth={2.4} />
+          </div>
+          <div className="card-label-rich">Forecast Bias (Mean Signed Error)</div>
+          <div className="card-value-row">
             <span
-              className="stat-number tabular"
-              style={{ color: isOver ? '#c2410c' : '#0f766e' }}
+              className="card-number-rich tabular"
+              style={{ color: isOver ? '#d97706' : '#0284c7' }}
             >
               {data.bias !== null ? (data.bias > 0 ? `+${data.bias}` : data.bias) : '—'}
             </span>
-            <span className="stat-unit">MW</span>
+            <span className="card-unit-rich">MW</span>
           </div>
           <div>
-            <span className={`stat-badge ${isOver ? 'badge-over' : 'badge-under'}`}>
-              {isOver ? 'Net Overforecast' : 'Net Underforecast'}
+            <span className={`badge-jewel ${isOver ? 'badge-over' : 'badge-under'}`}>
+              {isOver ? '▲ Net Overforecast' : '▼ Net Underforecast'}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Dual Charts Grid */}
-      <div className="dual-grid">
+      {/* Dual Charts Grid with Rich Colors */}
+      <div className="dual-chart-grid">
         {/* Chart 1: Curve Comparison */}
-        <div className="chart-panel">
-          <div className="chart-panel-header">
-            <div className="chart-panel-title">
-              <h2>Forecast vs Outturn Generation</h2>
-              <p>Day-ahead forecast compared with actual delivered generation (MW)</p>
+        <div className="glass-panel-rich">
+          <div className="glass-panel-header">
+            <div className="panel-heading-rich">
+              <h2>Forecast vs Outturn Generation Curve</h2>
+              <p>Day-ahead forecast vs actual generation across delivery day (MW)</p>
             </div>
 
-            <div className="chart-legend">
-              <span>
-                <span className="legend-dot" style={{ background: '#2d6a4f' }} />
+            <div className="legend-rich-row">
+              <span style={{ color: '#0284c7' }}>
+                <span className="legend-dot-rich" style={{ background: '#0284c7' }} />
                 Forecast
               </span>
-              <span>
-                <span className="legend-dot" style={{ background: '#0f172a' }} />
+              <span style={{ color: '#059669' }}>
+                <span className="legend-dot-rich" style={{ background: '#059669' }} />
                 Actual Outturn
               </span>
             </div>
           </div>
 
-          <div style={{ width: '100%', height: 260 }}>
+          <div style={{ width: '100%', height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={data.records} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 0, 0, 0.04)" />
+                <defs>
+                  <linearGradient id="accCyanFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.22} />
+                    <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" />
                 <XAxis
                   dataKey="localTime"
                   stroke="#94a3b8"
                   tick={{ fill: '#64748b', fontSize: 11 }}
                   interval={3}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(0, 0, 0, 0.08)' }}
+                  axisLine={{ stroke: 'rgba(203, 213, 225, 0.6)' }}
                 />
                 <YAxis
                   stroke="#94a3b8"
                   tick={{ fill: '#64748b', fontSize: 11 }}
                   tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(0, 0, 0, 0.08)' }}
+                  axisLine={{ stroke: 'rgba(203, 213, 225, 0.6)' }}
                 />
                 <Tooltip content={<CustomAccuracyTooltip />} />
                 <Area
                   type="monotone"
                   dataKey="forecastGeneration"
-                  fill="rgba(45, 106, 79, 0.08)"
-                  stroke="#2d6a4f"
-                  strokeWidth={2}
+                  fill="url(#accCyanFill)"
+                  stroke="#0284c7"
+                  strokeWidth={2.4}
                   name="Forecast"
                 />
                 <Line
                   type="monotone"
                   dataKey="actualGeneration"
-                  stroke="#0f172a"
-                  strokeWidth={2.2}
+                  stroke="#059669"
+                  strokeWidth={2.8}
                   dot={false}
                   name="Actual"
                 />
@@ -212,55 +230,55 @@ export const AccuracyPage = ({ data }) => {
         </div>
 
         {/* Chart 2: Signed Error Distribution */}
-        <div className="chart-panel">
-          <div className="chart-panel-header">
-            <div className="chart-panel-title">
-              <h2>Half-Hourly Signed Error</h2>
-              <p>Error = Forecast - Actual (Terracotta = Over, Teal = Under)</p>
+        <div className="glass-panel-rich">
+          <div className="glass-panel-header">
+            <div className="panel-heading-rich">
+              <h2>Half-Hourly Signed Error (Forecast - Actual)</h2>
+              <p>Vivid Amber = Overforecast (+MW), Electric Sky = Underforecast (-MW)</p>
             </div>
 
-            <div className="chart-legend">
-              <span style={{ color: '#c2410c' }}>
-                <span className="legend-dot" style={{ background: '#c2410c' }} />
+            <div className="legend-rich-row">
+              <span style={{ color: '#d97706' }}>
+                <span className="legend-dot-rich" style={{ background: '#f59e0b' }} />
                 Over (+MW)
               </span>
-              <span style={{ color: '#0f766e' }}>
-                <span className="legend-dot" style={{ background: '#0f766e' }} />
+              <span style={{ color: '#0284c7' }}>
+                <span className="legend-dot-rich" style={{ background: '#0ea5e9' }} />
                 Under (-MW)
               </span>
             </div>
           </div>
 
-          <div style={{ width: '100%', height: 260 }}>
+          <div style={{ width: '100%', height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.records} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 0, 0, 0.04)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" />
                 <XAxis
                   dataKey="localTime"
                   stroke="#94a3b8"
                   tick={{ fill: '#64748b', fontSize: 11 }}
                   interval={3}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(0, 0, 0, 0.08)' }}
+                  axisLine={{ stroke: 'rgba(203, 213, 225, 0.6)' }}
                 />
                 <YAxis
                   stroke="#94a3b8"
                   tick={{ fill: '#64748b', fontSize: 11 }}
                   tickFormatter={(val) => `${val > 0 ? `+${val}` : val}`}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(0, 0, 0, 0.08)' }}
+                  axisLine={{ stroke: 'rgba(203, 213, 225, 0.6)' }}
                 />
-                <ReferenceLine y={0} stroke="rgba(0, 0, 0, 0.15)" strokeWidth={1} />
+                <ReferenceLine y={0} stroke="rgba(148, 163, 184, 0.5)" strokeWidth={1} />
                 <Tooltip content={<CustomAccuracyTooltip />} />
-                <Bar dataKey="error" radius={[3, 3, 0, 0]}>
+                <Bar dataKey="error" radius={[4, 4, 0, 0]}>
                   {data.records.map((entry, index) => (
                     <Cell
-                      key={`cell-acc-${index}`}
+                      key={`cell-acc-rich-${index}`}
                       fill={
                         entry.error !== null
                           ? entry.error > 0
-                            ? '#c2410c'
-                            : '#0f766e'
+                            ? '#f59e0b'
+                            : '#0ea5e9'
                           : 'transparent'
                       }
                     />
@@ -272,19 +290,17 @@ export const AccuracyPage = ({ data }) => {
         </div>
       </div>
 
-      {/* Half-Hourly Comparison Table */}
-      <div className="table-panel">
-        <div className="table-panel-header">
-          <span className="table-panel-title">
-            Half-Hourly Accuracy Comparison (48 Settlement Periods)
-          </span>
-          <span style={{ fontSize: '12px', color: '#94a3b8' }}>
-            Signed Error Formula: <code style={{ color: '#2d6a4f' }}>Forecast - Actual</code>
+      {/* Accuracy Comparison Table */}
+      <div className="table-panel-rich">
+        <div className="table-header-glass">
+          <h3>Half-Hourly Accuracy Comparison (48 Settlement Periods)</h3>
+          <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 500 }}>
+            Formula: <code style={{ color: '#0284c7', fontWeight: 600 }}>Forecast - Actual</code>
           </span>
         </div>
 
-        <div className="table-scroll">
-          <table className="apple-table">
+        <div className="table-scroll-rich">
+          <table className="rich-table">
             <thead>
               <tr>
                 <th style={{ width: '60px' }}>SP</th>
@@ -303,18 +319,18 @@ export const AccuracyPage = ({ data }) => {
 
                 return (
                   <tr key={row.settlementPeriod}>
-                    <td style={{ fontWeight: 600, color: '#2d6a4f' }}>
+                    <td style={{ fontWeight: 700, color: '#0284c7' }}>
                       #{row.settlementPeriod}
                     </td>
-                    <td>{row.localTimeDisplay}</td>
-                    <td className="tabular" style={{ textAlign: 'right', color: '#0f172a' }}>
+                    <td style={{ fontWeight: 500 }}>{row.localTimeDisplay}</td>
+                    <td className="tabular" style={{ textAlign: 'right', color: '#0284c7', fontWeight: 600 }}>
                       {row.forecastGeneration !== null
                         ? `${row.forecastGeneration.toLocaleString()} MW`
                         : '—'}
                     </td>
                     <td
                       className="tabular"
-                      style={{ textAlign: 'right', fontWeight: 600, color: '#0f172a' }}
+                      style={{ textAlign: 'right', fontWeight: 700, color: '#059669' }}
                     >
                       {row.actualGeneration !== null
                         ? `${row.actualGeneration.toLocaleString()} MW`
@@ -324,8 +340,8 @@ export const AccuracyPage = ({ data }) => {
                       className="tabular"
                       style={{
                         textAlign: 'right',
-                        fontWeight: 600,
-                        color: isOver ? '#c2410c' : isUnder ? '#0f766e' : '#64748b',
+                        fontWeight: 700,
+                        color: isOver ? '#d97706' : isUnder ? '#0284c7' : '#64748b',
                       }}
                     >
                       {row.error !== null
@@ -338,14 +354,14 @@ export const AccuracyPage = ({ data }) => {
                     <td style={{ textAlign: 'center' }}>
                       {row.status === 'MATCHED' ? (
                         isOver ? (
-                          <span className="stat-badge badge-over">Overforecast</span>
+                          <span className="badge-jewel badge-over">Overforecast</span>
                         ) : isUnder ? (
-                          <span className="stat-badge badge-under">Underforecast</span>
+                          <span className="badge-jewel badge-under">Underforecast</span>
                         ) : (
-                          <span className="stat-badge badge-neutral">Balanced</span>
+                          <span className="badge-jewel badge-emerald">Balanced</span>
                         )
                       ) : (
-                        <span className="stat-badge badge-neutral">{row.status}</span>
+                        <span style={{ fontSize: '11px', color: '#94a3b8' }}>{row.status}</span>
                       )}
                     </td>
                   </tr>
