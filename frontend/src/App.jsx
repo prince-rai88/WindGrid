@@ -45,7 +45,7 @@ export function App() {
           }
         }
       } catch (err) {
-        if (isMounted) setError(err.message || 'API request failed');
+        if (isMounted) setError(err.message || 'Unable to retrieve forecast data');
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -63,7 +63,8 @@ export function App() {
   };
 
   return (
-    <div className="terminal-layout">
+    <div className="app-container">
+      {/* Apple-style Floating Liquid Glass Navbar */}
       <Navbar
         decisionDate={decisionDate}
         setDecisionDate={setDecisionDate}
@@ -73,26 +74,30 @@ export function App() {
         setActiveTab={setActiveTab}
       />
 
-      <main className="terminal-canvas">
+      {/* Main Content View */}
+      <main className="apple-content">
         {error && (
           <div
             style={{
-              padding: '10px 14px',
-              background: 'rgba(248, 81, 73, 0.1)',
-              border: '1px solid #f85149',
-              borderRadius: '3px',
-              color: '#ff7b72',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '11px',
+              padding: '14px 20px',
+              background: 'rgba(239, 68, 68, 0.06)',
+              border: '1px solid rgba(239, 68, 68, 0.15)',
+              borderRadius: 'var(--radius-md)',
+              color: '#b91c1c',
+              fontSize: '13px',
+              fontWeight: 500,
             }}
           >
-            SYSTEM ERROR: {error}
+            {error}
           </div>
         )}
 
         {loading && (
-          <div style={{ padding: '60px', textAlign: 'center', color: '#8b949e', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
-            <span style={{ color: '#58a6ff' }}>[QUERYING ELEXON BMRS STREAM...]</span>
+          <div className="state-box">
+            <div className="apple-spinner" />
+            <span style={{ color: '#64748b', fontSize: '13px' }}>
+              Updating forecast intelligence...
+            </span>
           </div>
         )}
 
@@ -116,27 +121,28 @@ export function App() {
         )}
       </main>
 
-      <footer className="terminal-footer">
+      {/* Minimal Footer */}
+      <footer className="apple-footer">
         <div>
-          <span>WINDGRID CORE | UK NATIONAL WIND INTELLIGENCE | DECISIONS: JAN 2026 | DATA: ELEXON FUELHH & WINDFOR</span>
+          <span>WindGrid • UK National Wind Generation Forecasting & Procurement Intelligence</span>
         </div>
 
-        <div style={{ display: 'flex', gap: '14px' }}>
+        <div style={{ display: 'flex', gap: '18px' }}>
           <a
             href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/FUELHH/stream"
             target="_blank"
             rel="noreferrer"
-            className="footer-link-subtle"
+            className="footer-link"
           >
-            FUELHH STREAM ↗
+            Elexon FUELHH
           </a>
           <a
             href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/WINDFOR/stream"
             target="_blank"
             rel="noreferrer"
-            className="footer-link-subtle"
+            className="footer-link"
           >
-            WINDFOR STREAM ↗
+            Elexon WINDFOR
           </a>
         </div>
       </footer>

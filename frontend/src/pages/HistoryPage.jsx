@@ -20,94 +20,127 @@ export const HistoryPage = ({ data, onSelectDate }) => {
   const isNetOver = agg.bias !== null && agg.bias > 0;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-      {/* Ticker Strip */}
-      <div className="trading-ticker">
-        <div className="ticker-group">
-          <div className="ticker-item">
-            <span className="ticker-label">SCOPE:</span>
-            <span className="ticker-val">JANUARY 2026 PURCHASING DECISIONS (31 DAYS)</span>
-          </div>
-          <div className="ticker-item">
-            <span className="ticker-label">CUTOFF:</span>
-            <span className="ticker-val">{data.decisionCutoff}</span>
-          </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+      {/* Header */}
+      <div className="page-header">
+        <div className="page-header-text">
+          <h1>January 2026 Evaluation</h1>
+          <p>
+            Historical performance across all 31 purchasing decision dates made in January 2026 (delivering 2 Jan – 1 Feb).
+          </p>
         </div>
 
-        <div className="ticker-group">
-          <div className="ticker-item">
-            <span className="ticker-label">MONTH MAE:</span>
-            <span className="ticker-val tabular accent-blue">
-              {agg.mae !== null ? `${agg.mae.toLocaleString()} MW` : '—'}
-            </span>
+        <div className="meta-pill-group">
+          <div className="meta-pill">
+            <span>Decisions:</span>
+            <strong>31 Days Evaluated</strong>
           </div>
-          <div className="ticker-item">
-            <span className="ticker-label">MONTH RMSE:</span>
-            <span className="ticker-val tabular">
-              {agg.rmse !== null ? `${agg.rmse.toLocaleString()} MW` : '—'}
-            </span>
+          <div className="meta-pill">
+            <span>Cutoff:</span>
+            <strong>{data.decisionCutoff || '11:00 London'}</strong>
           </div>
-          <div className="ticker-item">
-            <span className="ticker-label">SYSTEMIC BIAS:</span>
+        </div>
+      </div>
+
+      {/* 3 Metric Cards */}
+      <div className="stat-strip">
+        <div className="stat-card">
+          <div className="stat-label">Month-Wide Mean Absolute Error</div>
+          <div className="stat-value-group">
+            <span className="stat-number tabular">
+              {agg.mae !== null ? agg.mae.toLocaleString() : '—'}
+            </span>
+            <span className="stat-unit">MW</span>
+          </div>
+          <div className="stat-subtext">Overall average forecasting error magnitude</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-label">Month-Wide Root Mean Squared Error</div>
+          <div className="stat-value-group">
+            <span className="stat-number tabular">
+              {agg.rmse !== null ? agg.rmse.toLocaleString() : '—'}
+            </span>
+            <span className="stat-unit">MW</span>
+          </div>
+          <div className="stat-subtext">Reflects frequency and impact of large error spikes</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-label">Systemic Forecast Bias</div>
+          <div className="stat-value-group">
             <span
-              className={`ticker-val tabular ${isNetOver ? 'accent-amber' : 'accent-cyan'}`}
+              className="stat-number tabular"
+              style={{ color: isNetOver ? '#c2410c' : '#0f766e' }}
             >
-              {agg.bias !== null ? (agg.bias > 0 ? `+${agg.bias}` : agg.bias) : '—'} MW
-              {isNetOver ? ' [OVERFORECAST SKEW]' : ' [UNDERFORECAST SKEW]'}
+              {agg.bias !== null ? (agg.bias > 0 ? `+${agg.bias}` : agg.bias) : '—'}
             </span>
+            <span className="stat-unit">MW</span>
           </div>
-          <div className="ticker-item">
-            <span className="ticker-label">EVALUATED SP:</span>
-            <span className="ticker-val tabular">
-              {agg.totalMatchedHalfHours ? `${agg.totalMatchedHalfHours.toLocaleString()} SP` : '—'}
+          <div>
+            <span className={`stat-badge ${isNetOver ? 'badge-over' : 'badge-under'}`}>
+              {isNetOver ? 'Systemic Overforecast' : 'Systemic Underforecast'}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Grid: 2 Charts */}
-      <div className="grid-2col">
-        {/* Daily Error Magnitude Trend */}
-        <div className="trading-panel">
-          <div className="trading-panel-header">
-            <span className="panel-title">DAILY FORECAST ERROR MAGNITUDES (MAE & RMSE)</span>
-            <div className="panel-tools">
-              <span style={{ color: '#58a6ff', fontWeight: 600 }}>● MAE (MW)</span>
-              <span style={{ color: '#f85149', fontWeight: 600 }}>● RMSE (MW)</span>
+      {/* Dual Charts */}
+      <div className="dual-grid">
+        {/* Daily MAE Trend */}
+        <div className="chart-panel">
+          <div className="chart-panel-header">
+            <div className="chart-panel-title">
+              <h2>Daily Error Magnitudes (MAE & RMSE)</h2>
+              <p>Tracking day-ahead forecasting accuracy day-by-day across January 2026</p>
+            </div>
+
+            <div className="chart-legend">
+              <span>
+                <span className="legend-dot" style={{ background: '#2d6a4f' }} />
+                MAE (MW)
+              </span>
+              <span>
+                <span className="legend-dot" style={{ background: '#94a3b8' }} />
+                RMSE (MW)
+              </span>
             </div>
           </div>
 
-          <div className="chart-body" style={{ height: 260 }}>
+          <div style={{ width: '100%', height: 260 }}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={data.dailyResults} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#21262d" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 0, 0, 0.04)" />
                 <XAxis
                   dataKey="decisionDate"
-                  stroke="#484f58"
-                  tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
-                  tickFormatter={(val) => val.slice(8)} // show day
+                  stroke="#94a3b8"
+                  tick={{ fill: '#64748b', fontSize: 11 }}
+                  tickFormatter={(val) => val.slice(8)} // show day of month
+                  tickLine={false}
+                  axisLine={{ stroke: 'rgba(0, 0, 0, 0.08)' }}
                 />
                 <YAxis
-                  stroke="#484f58"
-                  tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
-                  tickFormatter={(val) => `${val}`}
+                  stroke="#94a3b8"
+                  tick={{ fill: '#64748b', fontSize: 11 }}
+                  tickLine={false}
+                  axisLine={{ stroke: 'rgba(0, 0, 0, 0.08)' }}
                 />
                 <Tooltip
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       const d = payload[0].payload;
                       return (
-                        <div className="terminal-tooltip">
-                          <div className="tooltip-header">
-                            DECISION: {d.decisionDate} → DELIVERY: {d.deliveryDate}
+                        <div className="apple-tooltip">
+                          <div className="tooltip-title">
+                            {d.decisionDate} → {d.deliveryDate}
                           </div>
-                          <div className="tooltip-entry">
-                            <span style={{ color: '#58a6ff' }}>MAE:</span>
-                            <span className="tabular">{d.mae} MW</span>
+                          <div className="tooltip-row">
+                            <span>MAE:</span>
+                            <strong className="tabular">{d.mae} MW</strong>
                           </div>
-                          <div className="tooltip-entry">
-                            <span style={{ color: '#f85149' }}>RMSE:</span>
-                            <span className="tabular">{d.rmse} MW</span>
+                          <div className="tooltip-row">
+                            <span>RMSE:</span>
+                            <strong className="tabular">{d.rmse} MW</strong>
                           </div>
                         </div>
                       );
@@ -118,17 +151,17 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                 <Line
                   type="monotone"
                   dataKey="mae"
-                  stroke="#388bfd"
-                  strokeWidth={2}
-                  dot={{ r: 2, fill: '#388bfd' }}
+                  stroke="#2d6a4f"
+                  strokeWidth={2.2}
+                  dot={{ r: 2.5, fill: '#2d6a4f' }}
                   name="MAE"
                 />
                 <Line
                   type="monotone"
                   dataKey="rmse"
-                  stroke="#f85149"
-                  strokeWidth={2}
-                  dot={{ r: 2, fill: '#f85149' }}
+                  stroke="#94a3b8"
+                  strokeWidth={1.8}
+                  dot={false}
                   name="RMSE"
                 />
               </ComposedChart>
@@ -137,51 +170,62 @@ export const HistoryPage = ({ data, onSelectDate }) => {
         </div>
 
         {/* Daily Signed Bias */}
-        <div className="trading-panel">
-          <div className="trading-panel-header">
-            <span className="panel-title">DAILY SYSTEMIC BIAS (AMBER = OVER, CYAN = UNDER)</span>
-            <div className="panel-tools">
-              <span style={{ color: '#d29922', fontWeight: 600 }}>■ OVER (+MW)</span>
-              <span style={{ color: '#38bdf8', fontWeight: 600 }}>■ UNDER (-MW)</span>
+        <div className="chart-panel">
+          <div className="chart-panel-header">
+            <div className="chart-panel-title">
+              <h2>Daily Signed Bias</h2>
+              <p>Positive (Terracotta) = Overforecast, Negative (Teal) = Underforecast</p>
+            </div>
+
+            <div className="chart-legend">
+              <span style={{ color: '#c2410c' }}>
+                <span className="legend-dot" style={{ background: '#c2410c' }} />
+                Over
+              </span>
+              <span style={{ color: '#0f766e' }}>
+                <span className="legend-dot" style={{ background: '#0f766e' }} />
+                Under
+              </span>
             </div>
           </div>
 
-          <div className="chart-body" style={{ height: 260 }}>
+          <div style={{ width: '100%', height: 260 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.dailyResults} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#21262d" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 0, 0, 0.04)" />
                 <XAxis
                   dataKey="decisionDate"
-                  stroke="#484f58"
-                  tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+                  stroke="#94a3b8"
+                  tick={{ fill: '#64748b', fontSize: 11 }}
                   tickFormatter={(val) => val.slice(8)}
+                  tickLine={false}
+                  axisLine={{ stroke: 'rgba(0, 0, 0, 0.08)' }}
                 />
                 <YAxis
-                  stroke="#484f58"
-                  tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+                  stroke="#94a3b8"
+                  tick={{ fill: '#64748b', fontSize: 11 }}
                   tickFormatter={(val) => `${val > 0 ? `+${val}` : val}`}
+                  tickLine={false}
+                  axisLine={{ stroke: 'rgba(0, 0, 0, 0.08)' }}
                 />
-                <ReferenceLine y={0} stroke="#484f58" strokeWidth={1} />
+                <ReferenceLine y={0} stroke="rgba(0, 0, 0, 0.15)" strokeWidth={1} />
                 <Tooltip
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       const d = payload[0].payload;
                       return (
-                        <div className="terminal-tooltip">
-                          <div className="tooltip-header">
-                            DECISION: {d.decisionDate} → DELIVERY: {d.deliveryDate}
+                        <div className="apple-tooltip">
+                          <div className="tooltip-title">
+                            {d.decisionDate} → {d.deliveryDate}
                           </div>
-                          <div className="tooltip-entry">
-                            <span style={{ color: d.bias > 0 ? '#d29922' : '#38bdf8' }}>
-                              BIAS:
-                            </span>
-                            <span className="tabular">
+                          <div className="tooltip-row">
+                            <span>Signed Bias:</span>
+                            <strong
+                              className="tabular"
+                              style={{ color: d.bias > 0 ? '#c2410c' : '#0f766e' }}
+                            >
                               {d.bias > 0 ? `+${d.bias}` : d.bias} MW
-                            </span>
-                          </div>
-                          <div className="tooltip-entry">
-                            <span>PERIODS:</span>
-                            <span>{d.overforecastCount} Over / {d.underforecastCount} Under</span>
+                            </strong>
                           </div>
                         </div>
                       );
@@ -189,15 +233,15 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                     return null;
                   }}
                 />
-                <Bar dataKey="bias">
+                <Bar dataKey="bias" radius={[3, 3, 0, 0]}>
                   {data.dailyResults.map((entry, index) => (
                     <Cell
-                      key={`bar-bias-${index}`}
+                      key={`cell-bias-${index}`}
                       fill={
                         entry.bias !== null
                           ? entry.bias > 0
-                            ? '#d29922'
-                            : '#38bdf8'
+                            ? '#c2410c'
+                            : '#0f766e'
                           : 'transparent'
                       }
                     />
@@ -209,30 +253,30 @@ export const HistoryPage = ({ data, onSelectDate }) => {
         </div>
       </div>
 
-      {/* 31-Day Financial Breakdown Table */}
-      <div className="trading-panel">
-        <div className="trading-panel-header">
-          <span className="panel-title">
-            JANUARY 2026 DAILY DECISION LOG (31 DECISION DATES)
+      {/* 31-Day Table */}
+      <div className="table-panel">
+        <div className="table-panel-header">
+          <span className="table-panel-title">
+            January 2026 Daily Decision Log (31 Decisions)
           </span>
-          <span style={{ color: '#8b949e', fontSize: '10px', fontFamily: 'var(--font-mono)' }}>
-            CLICK "INSPECT" TO LOAD HALF-HOURLY INTRADAY DATA
+          <span style={{ fontSize: '12px', color: '#94a3b8' }}>
+            Select any date to inspect half-hourly delivery profiles
           </span>
         </div>
 
         <div className="table-scroll">
-          <table className="terminal-table">
+          <table className="apple-table">
             <thead>
               <tr>
-                <th>DECISION DATE</th>
-                <th>DELIVERY DATE</th>
-                <th style={{ textAlign: 'right' }}>MAE (MW)</th>
-                <th style={{ textAlign: 'right' }}>RMSE (MW)</th>
-                <th style={{ textAlign: 'right' }}>SIGNED BIAS (MW)</th>
-                <th style={{ textAlign: 'right' }}>MEAN FC (MW)</th>
-                <th style={{ textAlign: 'right' }}>MEAN ACT (MW)</th>
-                <th style={{ textAlign: 'center' }}>MATCHED</th>
-                <th style={{ textAlign: 'center' }}>ACTION</th>
+                <th>Decision Date</th>
+                <th>Delivery Date</th>
+                <th style={{ textAlign: 'right' }}>MAE</th>
+                <th style={{ textAlign: 'right' }}>RMSE</th>
+                <th style={{ textAlign: 'right' }}>Signed Bias</th>
+                <th style={{ textAlign: 'right' }}>Mean Forecast</th>
+                <th style={{ textAlign: 'right' }}>Mean Actual</th>
+                <th style={{ textAlign: 'center' }}>Periods</th>
+                <th style={{ textAlign: 'center' }}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -240,12 +284,14 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                 const isOver = row.bias !== null && row.bias > 0;
                 return (
                   <tr key={row.decisionDate}>
-                    <td style={{ color: '#58a6ff', fontWeight: 600 }}>{row.decisionDate}</td>
+                    <td style={{ fontWeight: 600, color: '#0f172a' }}>
+                      {row.decisionDate}
+                    </td>
                     <td>{row.deliveryDate}</td>
                     <td className="tabular" style={{ textAlign: 'right' }}>
                       {row.mae !== null ? `${row.mae} MW` : '—'}
                     </td>
-                    <td className="tabular" style={{ textAlign: 'right' }}>
+                    <td className="tabular" style={{ textAlign: 'right', color: '#64748b' }}>
                       {row.rmse !== null ? `${row.rmse} MW` : '—'}
                     </td>
                     <td
@@ -253,7 +299,7 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                       style={{
                         textAlign: 'right',
                         fontWeight: 600,
-                        color: isOver ? '#d29922' : '#38bdf8',
+                        color: isOver ? '#c2410c' : '#0f766e',
                       }}
                     >
                       {row.bias !== null ? `${row.bias > 0 ? `+${row.bias}` : row.bias} MW` : '—'}
@@ -261,19 +307,18 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                     <td className="tabular" style={{ textAlign: 'right' }}>
                       {row.meanForecast !== null ? `${row.meanForecast.toLocaleString()} MW` : '—'}
                     </td>
-                    <td className="tabular" style={{ textAlign: 'right', color: '#3fb950' }}>
+                    <td className="tabular" style={{ textAlign: 'right', fontWeight: 500, color: '#2d6a4f' }}>
                       {row.meanActual !== null ? `${row.meanActual.toLocaleString()} MW` : '—'}
                     </td>
-                    <td className="tabular" style={{ textAlign: 'center' }}>
+                    <td className="tabular" style={{ textAlign: 'center', color: '#64748b' }}>
                       {row.matchedPeriods}/48
                     </td>
                     <td style={{ textAlign: 'center' }}>
                       <button
-                        className="quick-btn"
+                        className="apple-action-btn"
                         onClick={() => onSelectDate(row.decisionDate)}
-                        style={{ padding: '2px 8px', color: '#58a6ff' }}
                       >
-                        INSPECT →
+                        Inspect
                       </button>
                     </td>
                   </tr>

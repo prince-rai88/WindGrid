@@ -9,13 +9,13 @@ import {
   CartesianGrid,
 } from 'recharts';
 
-const RUN_COLORS = [
-  '#388bfd', // Blue
-  '#d29922', // Amber
-  '#a371f7', // Purple
-  '#f778ba', // Pink
-  '#38bdf8', // Cyan
-  '#7ee787', // Light green
+const RUN_PALETTE = [
+  '#2d6a4f', // Forest green (Day-Ahead locked run)
+  '#0284c7', // Sky blue
+  '#7c3aed', // Purple
+  '#d97706', // Amber
+  '#db2777', // Rose
+  '#475569', // Slate
 ];
 
 export const VersionsPage = ({ data, actualRecords = [] }) => {
@@ -49,82 +49,89 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-      {/* Ticker */}
-      <div className="trading-ticker">
-        <div className="ticker-group">
-          <div className="ticker-item">
-            <span className="ticker-label">DECISION DATE:</span>
-            <span className="ticker-val">{data.decisionDate}</span>
-          </div>
-          <div className="ticker-item">
-            <span className="ticker-label">DELIVERY DATE:</span>
-            <span className="ticker-val accent-blue">{data.deliveryDate}</span>
-          </div>
-          <div className="ticker-item">
-            <span className="ticker-label">PUBLICATION RUNS LOGGED:</span>
-            <span className="ticker-val tabular">{data.publicationRunsCount} RUNS</span>
-          </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+      {/* Header */}
+      <div className="page-header">
+        <div className="page-header-text">
+          <h1>Intraday Forecast Runs</h1>
+          <p>
+            Retrospective analysis comparing how National Grid ESO forecast versions evolved prior to and following the 11:00 auction cutoff.
+          </p>
         </div>
 
-        <div className="ticker-group">
-          <span style={{ color: '#8b949e', fontSize: '10px' }}>
-            NOTE: RUNS AFTER 11:00 LONDON DISPLAYED EXCLUSIVELY FOR RETROSPECTIVE UNCERTAINTY ANALYSIS
-          </span>
+        <div className="meta-pill-group">
+          <div className="meta-pill">
+            <span>Runs Logged:</span>
+            <strong>{data.publicationRunsCount} Runs</strong>
+          </div>
+          <div className="meta-pill">
+            <span>Delivery:</span>
+            <strong>{data.deliveryDate}</strong>
+          </div>
         </div>
       </div>
 
-      {/* Main Panel */}
-      <div className="trading-panel">
-        <div className="trading-panel-header">
-          <span className="panel-title">
-            INTRADAY FORECAST RUN HORIZON EVOLUTION VS OUTTURN ACTUAL (MW)
-          </span>
-          <div className="panel-tools">
-            <span style={{ color: '#3fb950', fontWeight: 600 }}>● OUTTURN ACTUAL</span>
-            <span style={{ color: '#6e7681' }}>|</span>
-            <span style={{ color: '#8b949e', fontSize: '10px' }}>SELECT RUNS BELOW</span>
+      {/* Spacious Multi-Line Chart Panel */}
+      <div className="chart-panel">
+        <div className="chart-panel-header">
+          <div className="chart-panel-title">
+            <h2>Multi-Run Horizon Evolution vs Actual Outturn</h2>
+            <p>Comparing forecast updates across publication horizons against delivered wind generation</p>
+          </div>
+
+          <div className="chart-legend">
+            <span>
+              <span className="legend-dot" style={{ background: '#0f172a' }} />
+              Actual Outturn
+            </span>
           </div>
         </div>
 
-        {/* Run Selector Chips */}
-        <div style={{ padding: '8px 12px', background: '#11151c', borderBottom: '1px solid #21262d', display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{ color: '#6e7681', fontSize: '10px', textTransform: 'uppercase', marginRight: '4px' }}>
-            TOGGLE RUN:
+        {/* Minimal Run Toggle Pills */}
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+          <span style={{ fontSize: '12px', color: '#64748b', alignSelf: 'center', marginRight: '4px' }}>
+            Visible Runs:
           </span>
           {runs.map((r, idx) => {
             const isSelected = selectedRuns.includes(r.publishTimeUtc);
-            const color = RUN_COLORS[idx % RUN_COLORS.length];
-            const isPreCutoff = r.publishTimeUtc.includes('T02:') || r.publishTimeUtc.includes('T04:') || r.publishTimeUtc.includes('T07:') || r.publishTimeUtc.includes('T09:');
+            const color = RUN_PALETTE[idx % RUN_PALETTE.length];
+            const isPreCutoff =
+              r.publishTimeUtc.includes('T02:') ||
+              r.publishTimeUtc.includes('T04:') ||
+              r.publishTimeUtc.includes('T07:') ||
+              r.publishTimeUtc.includes('T09:');
 
             return (
               <button
                 key={r.publishTimeUtc}
                 onClick={() => toggleRun(r.publishTimeUtc)}
-                className="quick-btn"
                 style={{
-                  borderColor: isSelected ? color : '#30363d',
-                  background: isSelected ? `${color}22` : '#161b22',
-                  color: isSelected ? color : '#8b949e',
+                  background: isSelected ? 'rgba(0, 0, 0, 0.05)' : '#ffffff',
+                  border: isSelected ? `1.5px solid ${color}` : '1px solid rgba(0, 0, 0, 0.08)',
+                  borderRadius: '9999px',
+                  padding: '4px 12px',
+                  fontSize: '12px',
                   fontWeight: isSelected ? 600 : 400,
+                  color: isSelected ? '#0f172a' : '#64748b',
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '5px',
-                  padding: '3px 8px',
+                  gap: '6px',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 <span
                   style={{
-                    width: '6px',
-                    height: '6px',
+                    width: '7px',
+                    height: '7px',
                     borderRadius: '50%',
-                    background: isSelected ? color : '#6e7681',
+                    background: isSelected ? color : '#cbd5e1',
                   }}
                 />
                 <span>{r.publishTimeUtc.slice(11, 16)} UTC</span>
                 {isPreCutoff && (
-                  <span style={{ fontSize: '9px', color: '#58a6ff', opacity: 0.9 }}>
-                    [DA]
+                  <span style={{ fontSize: '10px', color: '#2d6a4f', fontWeight: 600 }}>
+                    [Day-Ahead]
                   </span>
                 )}
               </button>
@@ -132,42 +139,44 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
           })}
         </div>
 
-        <div className="chart-body" style={{ height: 340 }}>
+        <div style={{ width: '100%', height: 340 }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 10, right: 12, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#21262d" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 0, 0, 0.04)" />
               <XAxis
                 dataKey="localTime"
-                stroke="#484f58"
-                tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+                stroke="#94a3b8"
+                tick={{ fill: '#64748b', fontSize: 11 }}
                 interval={3}
+                tickLine={false}
+                axisLine={{ stroke: 'rgba(0, 0, 0, 0.08)' }}
               />
               <YAxis
-                stroke="#484f58"
-                tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+                stroke="#94a3b8"
+                tick={{ fill: '#64748b', fontSize: 11 }}
                 tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
+                tickLine={false}
+                axisLine={{ stroke: 'rgba(0, 0, 0, 0.08)' }}
               />
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const d = payload[0].payload;
                     return (
-                      <div className="terminal-tooltip">
-                        <div className="tooltip-header">
-                          SP {d.settlementPeriod} • {d.localTimeDisplay} London
+                      <div className="apple-tooltip">
+                        <div className="tooltip-title">
+                          SP {d.settlementPeriod} • {d.localTimeDisplay}
                         </div>
-                        <div className="tooltip-entry">
-                          <span style={{ color: '#3fb950' }}>ACTUAL:</span>
-                          <strong className="tabular" style={{ color: '#3fb950' }}>
-                            {d.actualGeneration?.toLocaleString() ?? '—'} MW
-                          </strong>
+                        <div className="tooltip-row">
+                          <span style={{ color: '#0f172a', fontWeight: 600 }}>Actual Outturn:</span>
+                          <strong className="tabular">{d.actualGeneration?.toLocaleString() ?? '—'} MW</strong>
                         </div>
                         {selectedRuns.map((pubUtc) => {
                           const val = d[pubUtc];
                           const runIdx = runs.findIndex((r) => r.publishTimeUtc === pubUtc);
-                          const color = RUN_COLORS[runIdx % RUN_COLORS.length];
+                          const color = RUN_PALETTE[runIdx % RUN_PALETTE.length];
                           return (
-                            <div key={pubUtc} className="tooltip-entry" style={{ fontSize: '10px' }}>
+                            <div key={pubUtc} className="tooltip-row" style={{ fontSize: '11px' }}>
                               <span style={{ color }}>{pubUtc.slice(11, 16)} UTC:</span>
                               <span className="tabular">{val !== null ? `${val.toLocaleString()} MW` : '—'}</span>
                             </div>
@@ -179,12 +188,12 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
                   return null;
                 }}
               />
-              {/* Actual Line */}
+              {/* Actual Outturn Line */}
               <Line
                 type="monotone"
                 dataKey="actualGeneration"
-                stroke="#2ea043"
-                strokeWidth={2.5}
+                stroke="#0f172a"
+                strokeWidth={2.4}
                 dot={false}
                 name="Actual"
               />
@@ -192,14 +201,14 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
               {/* Version Lines */}
               {selectedRuns.map((pubUtc) => {
                 const runIdx = runs.findIndex((r) => r.publishTimeUtc === pubUtc);
-                const color = RUN_COLORS[runIdx % RUN_COLORS.length];
+                const color = RUN_PALETTE[runIdx % RUN_PALETTE.length];
                 return (
                   <Line
                     key={pubUtc}
                     type="monotone"
                     dataKey={pubUtc}
                     stroke={color}
-                    strokeWidth={1.5}
+                    strokeWidth={1.8}
                     dot={false}
                     name={`Run ${pubUtc.slice(11, 16)} UTC`}
                   />
