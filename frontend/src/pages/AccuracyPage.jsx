@@ -160,11 +160,11 @@ export const AccuracyPage = ({ data }) => {
 
             <div className="chart-legend-editorial">
               <span>
-                <span className="legend-indicator" style={{ background: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
+                <span className="legend-indicator" style={{ background: '#ffffff', boxShadow: '0 0 8px rgba(255, 255, 255, 0.6)' }} />
                 Forecast
               </span>
               <span>
-                <span className="legend-indicator" style={{ background: '#2dd4bf', boxShadow: '0 0 8px #2dd4bf' }} />
+                <span className="legend-indicator" style={{ background: '#7dd3fc', boxShadow: '0 0 8px #7dd3fc' }} />
                 Actual
               </span>
             </div>
@@ -173,35 +173,35 @@ export const AccuracyPage = ({ data }) => {
           <div style={{ width: '100%', height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={data.records} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.12)" />
                 <XAxis
                   dataKey="localTime"
-                  stroke="#64748b"
-                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="rgba(255, 255, 255, 0.3)"
+                  tick={{ fill: '#cbd5e1', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   interval={3}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.2)' }}
                 />
                 <YAxis
-                  stroke="#64748b"
-                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="rgba(255, 255, 255, 0.3)"
+                  tick={{ fill: '#cbd5e1', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.2)' }}
                 />
                 <Tooltip content={<CustomAccuracyTooltip />} />
                 <Area
                   type="monotone"
                   dataKey="forecastGeneration"
-                  fill="rgba(56, 189, 248, 0.14)"
-                  stroke="#38bdf8"
+                  fill="rgba(255, 255, 255, 0.16)"
+                  stroke="#ffffff"
                   strokeWidth={2}
                   name="Forecast"
                 />
                 <Line
                   type="monotone"
                   dataKey="actualGeneration"
-                  stroke="#2dd4bf"
+                  stroke="#7dd3fc"
                   strokeWidth={2.4}
                   dot={false}
                   name="Actual"
@@ -216,16 +216,16 @@ export const AccuracyPage = ({ data }) => {
           <div className="chart-card-header">
             <div>
               <h3 className="chart-heading-title">Half-Hourly Signed Error</h3>
-              <p className="chart-heading-sub">Formula: Forecast - Actual (Amber = Over, Cyan = Under)</p>
+              <p className="chart-heading-sub">Formula: Forecast - Actual (Amber = Over, Glacial Ice = Under)</p>
             </div>
 
             <div className="chart-legend-editorial">
-              <span style={{ color: '#fbbf24' }}>
-                <span className="legend-indicator" style={{ background: '#fbbf24', boxShadow: '0 0 8px #fbbf24' }} />
+              <span style={{ color: '#fde047' }}>
+                <span className="legend-indicator" style={{ background: '#fde047', boxShadow: '0 0 8px #fde047' }} />
                 Over (+MW)
               </span>
-              <span style={{ color: '#38bdf8' }}>
-                <span className="legend-indicator" style={{ background: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
+              <span style={{ color: '#bae6fd' }}>
+                <span className="legend-indicator" style={{ background: '#bae6fd', boxShadow: '0 0 8px #bae6fd' }} />
                 Under (-MW)
               </span>
             </div>
@@ -234,23 +234,23 @@ export const AccuracyPage = ({ data }) => {
           <div style={{ width: '100%', height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.records} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.12)" />
                 <XAxis
                   dataKey="localTime"
-                  stroke="#64748b"
-                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="rgba(255, 255, 255, 0.3)"
+                  tick={{ fill: '#cbd5e1', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   interval={3}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.2)' }}
                 />
                 <YAxis
-                  stroke="#64748b"
-                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="rgba(255, 255, 255, 0.3)"
+                  tick={{ fill: '#cbd5e1', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   tickFormatter={(val) => `${val > 0 ? `+${val}` : val}`}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.2)' }}
                 />
-                <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.25)" strokeWidth={1} />
+                <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.3)" strokeWidth={1} />
                 <Tooltip content={<CustomAccuracyTooltip />} />
                 <Bar dataKey="error" radius={[3, 3, 0, 0]}>
                   {data.records.map((entry, index) => (
@@ -259,8 +259,8 @@ export const AccuracyPage = ({ data }) => {
                       fill={
                         entry.error !== null
                           ? entry.error > 0
-                            ? '#fbbf24'
-                            : '#38bdf8'
+                            ? '#fde047'
+                            : '#bae6fd'
                           : 'transparent'
                       }
                     />
