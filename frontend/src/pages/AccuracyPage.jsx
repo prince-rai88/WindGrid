@@ -13,16 +13,7 @@ import {
   ReferenceLine,
   Cell,
 } from 'recharts';
-import {
-  Activity,
-  Target,
-  Compass,
-  CheckCircle,
-  AlertTriangle,
-  Scale,
-} from 'lucide-react';
-import { MetricCard } from '../components/MetricCard';
-import { ContextBanner } from '../components/ContextBanner';
+import { TradingTicker } from '../components/TradingTicker';
 
 const CustomAccuracyTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
@@ -31,28 +22,38 @@ const CustomAccuracyTooltip = ({ active, payload }) => {
     const isUnder = data.error !== null && data.error < 0;
 
     return (
-      <div className="custom-tooltip">
-        <div className="tooltip-time">
-          SP {data.settlementPeriod} • {data.localTimeDisplay} (London Time)
+      <div className="terminal-tooltip">
+        <div className="tooltip-header">
+          SP {data.settlementPeriod} • {data.localTimeDisplay} London
         </div>
-        <div className="tooltip-row">
-          <span style={{ color: '#0ea5e9' }}>Forecast:</span>
-          <strong className="num-tabular mono">
+        <div className="tooltip-entry">
+          <span style={{ color: '#8b949e' }}>DA FORECAST:</span>
+          <strong className="tabular" style={{ color: '#58a6ff' }}>
             {data.forecastGeneration !== null ? `${data.forecastGeneration.toLocaleString()} MW` : 'N/A'}
           </strong>
         </div>
-        <div className="tooltip-row">
-          <span style={{ color: '#10b981' }}>Actual:</span>
-          <strong className="num-tabular mono">
+        <div className="tooltip-entry">
+          <span style={{ color: '#8b949e' }}>OUTTURN ACTUAL:</span>
+          <strong className="tabular" style={{ color: '#3fb950' }}>
             {data.actualGeneration !== null ? `${data.actualGeneration.toLocaleString()} MW` : 'N/A'}
           </strong>
         </div>
         {data.error !== null && (
-          <div className="tooltip-row" style={{ marginTop: '4px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '4px' }}>
-            <span style={{ color: isOver ? '#fbbf24' : isUnder ? '#38bdf8' : '#94a3b8' }}>
-              Signed Error:
+          <div
+            className="tooltip-entry"
+            style={{
+              marginTop: '4px',
+              borderTop: '1px solid #21262d',
+              paddingTop: '4px',
+            }}
+          >
+            <span style={{ color: isOver ? '#d29922' : isUnder ? '#38bdf8' : '#8b949e' }}>
+              SIGNED DELTA:
             </span>
-            <strong className="num-tabular mono" style={{ color: isOver ? '#fbbf24' : isUnder ? '#38bdf8' : '#94a3b8' }}>
+            <strong
+              className="tabular"
+              style={{ color: isOver ? '#d29922' : isUnder ? '#38bdf8' : '#8b949e' }}
+            >
               {data.error > 0 ? `+${data.error.toLocaleString()}` : data.error.toLocaleString()} MW
               {data.percentageError !== null && ` (${data.percentageError > 0 ? `+${data.percentageError}` : data.percentageError}%)`}
             </strong>
@@ -69,230 +70,163 @@ export const AccuracyPage = ({ data }) => {
 
   if (!data.isAvailable) {
     return (
-      <div>
-        <ContextBanner
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <TradingTicker
           decisionDate={data.decisionDate}
           deliveryDate={data.deliveryDate}
-          decisionCutoffDisplay={data.decisionCutoffDisplay}
-          latestForecastPublicationDisplay={data.latestForecastPublicationDisplay}
+          cutoffDisplay={data.decisionCutoffDisplay}
+          pubDisplay={data.latestForecastPublicationDisplay}
+          coverageCount={0}
+          totalIntervals={data.totalPeriods}
+          coveragePercent={0}
         />
-        <div className="state-container table-card">
-          <AlertTriangle size={42} color="#f59e0b" />
-          <h3>Accuracy Data Unavailable for Selected Date</h3>
-          <p style={{ color: '#94a3b8', maxWidth: '500px', fontSize: '0.85rem' }}>
-            Either forecast or actual generation data from Elexon BMRS is missing for {data.deliveryDate}. In accordance with strict auditing standards, no fabricated or zero values are substituted.
+        <div className="trading-panel" style={{ padding: '30px', textAlign: 'center' }}>
+          <span className="panel-title" style={{ color: '#d29922', justifyContent: 'center' }}>
+            OUTTURN OR FORECAST RECORDS UNAVAILABLE FOR {data.deliveryDate}
+          </span>
+          <p style={{ color: '#8b949e', fontSize: '11px', marginTop: '6px', fontFamily: 'var(--font-mono)' }}>
+            Elexon BMRS dataset stream returned no valid matched records for this delivery window.
           </p>
         </div>
       </div>
     );
   }
 
-  const isOverforecastNet = data.bias !== null && data.bias > 0;
-  const biasLabel = isOverforecastNet
-    ? `Net Overforecast (+${data.bias} MW)`
-    : `Net Underforecast (${data.bias} MW)`;
-  const biasBadgeType = isOverforecastNet ? 'overforecast' : 'underforecast';
-
   return (
-    <div>
-      <ContextBanner
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <TradingTicker
         decisionDate={data.decisionDate}
         deliveryDate={data.deliveryDate}
-        decisionCutoffDisplay={data.decisionCutoffDisplay}
-        latestForecastPublicationDisplay={data.latestForecastPublicationDisplay}
+        cutoffDisplay={data.decisionCutoffDisplay}
+        pubDisplay={data.latestForecastPublicationDisplay}
+        coverageCount={data.matchedPeriods}
+        totalIntervals={data.totalPeriods}
+        coveragePercent={data.coveragePercent}
+        meanFc={data.meanForecastGeneration}
+        mae={data.mae}
+        rmse={data.rmse}
+        bias={data.bias}
       />
 
-      {/* KPI Metrics Grid */}
-      <div className="kpi-grid">
-        <MetricCard
-          title="Mean Absolute Error (MAE)"
-          value={data.mae !== null ? data.mae.toLocaleString() : null}
-          unit="MW"
-          icon={Target}
-          caption="Average absolute error magnitude"
-          badge="MAE Metric"
-          badgeType="neutral"
-        />
-
-        <MetricCard
-          title="Root Mean Squared Error (RMSE)"
-          value={data.rmse !== null ? data.rmse.toLocaleString() : null}
-          unit="MW"
-          icon={Activity}
-          caption="Penalizes large forecast excursions"
-          badge="RMSE Metric"
-          badgeType="neutral"
-        />
-
-        <MetricCard
-          title="Forecast Bias (Mean Signed Error)"
-          value={data.bias !== null ? (data.bias > 0 ? `+${data.bias}` : data.bias) : null}
-          unit="MW"
-          icon={Compass}
-          caption="Positive = Overforecast, Negative = Underforecast"
-          badge={biasLabel}
-          badgeType={biasBadgeType}
-        />
-
-        <MetricCard
-          title="Matched Delivery Coverage"
-          value={`${data.matchedPeriods}/${data.totalPeriods}`}
-          unit={`(${data.coveragePercent}%)`}
-          icon={CheckCircle}
-          caption="Valid matched forecast & actual pairs"
-        />
-
-        <MetricCard
-          title="Forecast Balance"
-          value={`${data.overforecastCount} Over / ${data.underforecastCount} Under`}
-          unit=""
-          icon={Scale}
-          caption={`${data.exactCount} periods within 0.01 MW`}
-          badge={`${data.overforecastCount > data.underforecastCount ? 'Over' : 'Under'}forecast skew`}
-          badgeType="neutral"
-        />
-      </div>
-
-      {/* Chart 1: Forecast vs Actual Generation Profile */}
-      <div className="chart-card">
-        <div className="chart-card-header">
-          <div className="chart-title-area">
-            <h2>Forecast vs Actual Wind Generation Profile</h2>
-            <p>
-              Delivery Date: {data.deliveryDate} • Matched across 48 half-hour settlement periods.
-            </p>
+      {/* Chart Section: 2 Columns on Desktop */}
+      <div className="grid-2col">
+        {/* Curve Comparison Chart */}
+        <div className="trading-panel">
+          <div className="trading-panel-header">
+            <span className="panel-title">DA FORECAST VS OUTTURN ACTUAL CURVE (MW)</span>
+            <div className="panel-tools">
+              <span style={{ color: '#58a6ff', fontWeight: 600 }}>● FORECAST</span>
+              <span style={{ color: '#3fb950', fontWeight: 600 }}>● ACTUAL</span>
+            </div>
           </div>
 
-          <div className="chart-legend-custom">
-            <div className="legend-item">
-              <span className="legend-color-dot" style={{ background: '#0ea5e9' }} />
-              <span>Selected Day-Ahead Forecast</span>
-            </div>
-            <div className="legend-item">
-              <span className="legend-color-dot" style={{ background: '#10b981' }} />
-              <span>Actual Wind Generation (FUELHH)</span>
-            </div>
+          <div className="chart-body" style={{ height: 260 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={data.records} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#21262d" />
+                <XAxis
+                  dataKey="localTime"
+                  stroke="#484f58"
+                  tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+                  interval={3}
+                />
+                <YAxis
+                  stroke="#484f58"
+                  tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+                  tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
+                />
+                <Tooltip content={<CustomAccuracyTooltip />} />
+                <Area
+                  type="monotone"
+                  dataKey="forecastGeneration"
+                  fill="rgba(56, 139, 253, 0.12)"
+                  stroke="#388bfd"
+                  strokeWidth={1.8}
+                  name="Forecast"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="actualGeneration"
+                  stroke="#2ea043"
+                  strokeWidth={2}
+                  dot={false}
+                  name="Actual"
+                />
+              </ComposedChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
-        <div style={{ width: '100%', height: 320 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={data.records} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.06)" />
-              <XAxis
-                dataKey="localTime"
-                stroke="#64748b"
-                tick={{ fill: '#94a3b8', fontSize: 11 }}
-                interval={3}
-              />
-              <YAxis
-                stroke="#64748b"
-                tick={{ fill: '#94a3b8', fontSize: 11 }}
-                tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
-              />
-              <Tooltip content={<CustomAccuracyTooltip />} />
-              <Area
-                type="monotone"
-                dataKey="forecastGeneration"
-                fill="rgba(14, 165, 233, 0.12)"
-                stroke="#0ea5e9"
-                strokeWidth={2}
-                name="Forecast"
-              />
-              <Line
-                type="monotone"
-                dataKey="actualGeneration"
-                stroke="#10b981"
-                strokeWidth={2.5}
-                dot={false}
-                name="Actual"
-              />
-            </ComposedChart>
-          </ResponsiveContainer>
+        {/* Signed Error Distribution Chart */}
+        <div className="trading-panel">
+          <div className="trading-panel-header">
+            <span className="panel-title">HALF-HOURLY IMBALANCE DELTA (FC - ACTUAL)</span>
+            <div className="panel-tools">
+              <span style={{ color: '#d29922', fontWeight: 600 }}>■ OVER (+MW)</span>
+              <span style={{ color: '#38bdf8', fontWeight: 600 }}>■ UNDER (-MW)</span>
+            </div>
+          </div>
+
+          <div className="chart-body" style={{ height: 260 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data.records} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#21262d" />
+                <XAxis
+                  dataKey="localTime"
+                  stroke="#484f58"
+                  tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+                  interval={3}
+                />
+                <YAxis
+                  stroke="#484f58"
+                  tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+                  tickFormatter={(val) => `${val > 0 ? `+${val}` : val}`}
+                />
+                <ReferenceLine y={0} stroke="#484f58" strokeWidth={1} />
+                <Tooltip content={<CustomAccuracyTooltip />} />
+                <Bar dataKey="error">
+                  {data.records.map((entry, index) => (
+                    <Cell
+                      key={`cell-err-${index}`}
+                      fill={
+                        entry.error !== null
+                          ? entry.error > 0
+                            ? '#d29922'
+                            : '#38bdf8'
+                          : 'transparent'
+                      }
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
-      {/* Chart 2: Signed Forecast Error Distribution */}
-      <div className="chart-card">
-        <div className="chart-card-header">
-          <div className="chart-title-area">
-            <h2>Half-Hourly Signed Forecast Error (error = forecast - actual)</h2>
-            <p>
-              Amber bars indicate overforecast (forecast &gt; actual). Cyan bars indicate underforecast (forecast &lt; actual).
-            </p>
-          </div>
-
-          <div className="chart-legend-custom">
-            <div className="legend-item">
-              <span className="legend-color-dot" style={{ background: '#f59e0b' }} />
-              <span>Overforecast (+MW)</span>
-            </div>
-            <div className="legend-item">
-              <span className="legend-color-dot" style={{ background: '#06b6d4' }} />
-              <span>Underforecast (-MW)</span>
-            </div>
-          </div>
-        </div>
-
-        <div style={{ width: '100%', height: 260 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data.records} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.06)" />
-              <XAxis
-                dataKey="localTime"
-                stroke="#64748b"
-                tick={{ fill: '#94a3b8', fontSize: 11 }}
-                interval={3}
-              />
-              <YAxis
-                stroke="#64748b"
-                tick={{ fill: '#94a3b8', fontSize: 11 }}
-                tickFormatter={(val) => `${val > 0 ? `+${val}` : val}`}
-              />
-              <ReferenceLine y={0} stroke="#64748b" strokeWidth={1.5} />
-              <Tooltip content={<CustomAccuracyTooltip />} />
-              <Bar dataKey="error">
-                {data.records.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={
-                      entry.error !== null
-                        ? entry.error > 0
-                          ? '#f59e0b'
-                          : '#06b6d4'
-                        : 'transparent'
-                    }
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Half-Hourly Comparison Table */}
-      <div className="table-card">
-        <div className="table-header-bar">
-          <span className="table-header-title">
-            Half-Hourly Accuracy Comparison Table (48 Periods)
+      {/* Half-Hourly Financial Comparison Table */}
+      <div className="trading-panel">
+        <div className="trading-panel-header">
+          <span className="panel-title">
+            HALF-HOURLY QUANTITATIVE ACCURACY SHEET (48 PERIODS)
           </span>
-          <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-            Signed Error Formula: <code className="mono">error = forecast - actual</code>
+          <span style={{ color: '#8b949e', fontSize: '10px', fontFamily: 'var(--font-mono)' }}>
+            CONVENTION: <code style={{ color: '#58a6ff' }}>ERROR = FORECAST - ACTUAL</code>
           </span>
         </div>
 
-        <div className="table-responsive">
-          <table className="enterprise-table">
+        <div className="table-scroll">
+          <table className="terminal-table">
             <thead>
               <tr>
-                <th>SP</th>
-                <th>London Time Window</th>
-                <th>Forecast (MW)</th>
-                <th>Actual (MW)</th>
-                <th>Signed Error (MW)</th>
-                <th>Abs Error (|e|)</th>
-                <th>% Error</th>
-                <th>Classification</th>
+                <th style={{ width: '48px' }}>SP</th>
+                <th>LONDON WINDOW</th>
+                <th style={{ textAlign: 'right' }}>DA FORECAST (MW)</th>
+                <th style={{ textAlign: 'right' }}>OUTTURN ACTUAL (MW)</th>
+                <th style={{ textAlign: 'right' }}>DELTA (MW)</th>
+                <th style={{ textAlign: 'right' }}>|ERROR| (MW)</th>
+                <th style={{ textAlign: 'right' }}>% ERROR</th>
+                <th style={{ textAlign: 'center' }}>CLASSIFICATION</th>
               </tr>
             </thead>
             <tbody>
@@ -302,46 +236,52 @@ export const AccuracyPage = ({ data }) => {
 
                 return (
                   <tr key={row.settlementPeriod}>
-                    <td className="mono" style={{ color: '#0ea5e9', fontWeight: 600 }}>
-                      #{row.settlementPeriod}
-                    </td>
+                    <td style={{ color: '#58a6ff', fontWeight: 600 }}>#{row.settlementPeriod}</td>
                     <td>{row.localTimeDisplay}</td>
-                    <td className="num-tabular mono" style={{ color: '#f8fafc' }}>
-                      {row.forecastGeneration !== null ? `${row.forecastGeneration.toLocaleString()} MW` : '—'}
-                    </td>
-                    <td className="num-tabular mono" style={{ color: '#10b981', fontWeight: 500 }}>
-                      {row.actualGeneration !== null ? `${row.actualGeneration.toLocaleString()} MW` : '—'}
+                    <td className="tabular" style={{ textAlign: 'right', color: '#c9d1d9' }}>
+                      {row.forecastGeneration !== null
+                        ? `${row.forecastGeneration.toLocaleString()} MW`
+                        : '—'}
                     </td>
                     <td
-                      className="num-tabular mono"
+                      className="tabular"
+                      style={{ textAlign: 'right', color: '#3fb950', fontWeight: 500 }}
+                    >
+                      {row.actualGeneration !== null
+                        ? `${row.actualGeneration.toLocaleString()} MW`
+                        : '—'}
+                    </td>
+                    <td
+                      className="tabular"
                       style={{
+                        textAlign: 'right',
                         fontWeight: 600,
-                        color: isOver ? '#fbbf24' : isUnder ? '#38bdf8' : '#94a3b8',
+                        color: isOver ? '#d29922' : isUnder ? '#38bdf8' : '#8b949e',
                       }}
                     >
                       {row.error !== null
                         ? `${row.error > 0 ? `+${row.error.toLocaleString()}` : row.error.toLocaleString()} MW`
                         : '—'}
                     </td>
-                    <td className="num-tabular mono">
+                    <td className="tabular" style={{ textAlign: 'right', color: '#8b949e' }}>
                       {row.absError !== null ? `${row.absError.toLocaleString()} MW` : '—'}
                     </td>
-                    <td className="num-tabular mono">
+                    <td className="tabular" style={{ textAlign: 'right', color: '#8b949e' }}>
                       {row.percentageError !== null
                         ? `${row.percentageError > 0 ? `+${row.percentageError}` : row.percentageError}%`
                         : '—'}
                     </td>
-                    <td>
+                    <td style={{ textAlign: 'center' }}>
                       {row.status === 'MATCHED' ? (
                         isOver ? (
-                          <span className="badge badge-overforecast">Overforecast</span>
+                          <span className="tag-pill tag-over">OVERFORECAST</span>
                         ) : isUnder ? (
-                          <span className="badge badge-underforecast">Underforecast</span>
+                          <span className="tag-pill tag-under">UNDERFORECAST</span>
                         ) : (
-                          <span className="badge badge-neutral">Exact</span>
+                          <span className="tag-pill tag-exact">BALANCED</span>
                         )
                       ) : (
-                        <span className="badge badge-neutral">{row.status}</span>
+                        <span className="tag-pill tag-dim">{row.status}</span>
                       )}
                     </td>
                   </tr>

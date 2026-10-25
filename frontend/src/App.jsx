@@ -5,7 +5,6 @@ import { AccuracyPage } from './pages/AccuracyPage';
 import { HistoryPage } from './pages/HistoryPage';
 import { VersionsPage } from './pages/VersionsPage';
 import { api } from './services/api';
-import { AlertCircle, ExternalLink, ShieldCheck } from 'lucide-react';
 
 export function App() {
   const [decisionDate, setDecisionDate] = useState('2026-01-15');
@@ -20,7 +19,6 @@ export function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch data when date or cutoff changes
   useEffect(() => {
     let isMounted = true;
     async function loadData() {
@@ -47,7 +45,7 @@ export function App() {
           }
         }
       } catch (err) {
-        if (isMounted) setError(err.message || 'Failed to fetch data');
+        if (isMounted) setError(err.message || 'API request failed');
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -65,7 +63,7 @@ export function App() {
   };
 
   return (
-    <div className="app-layout">
+    <div className="terminal-layout">
       <Navbar
         decisionDate={decisionDate}
         setDecisionDate={setDecisionDate}
@@ -75,20 +73,26 @@ export function App() {
         setActiveTab={setActiveTab}
       />
 
-      <main className="main-content">
+      <main className="terminal-canvas">
         {error && (
-          <div className="error-banner">
-            <AlertCircle size={18} />
-            <span>{error}</span>
+          <div
+            style={{
+              padding: '10px 14px',
+              background: 'rgba(248, 81, 73, 0.1)',
+              border: '1px solid #f85149',
+              borderRadius: '3px',
+              color: '#ff7b72',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+            }}
+          >
+            SYSTEM ERROR: {error}
           </div>
         )}
 
         {loading && (
-          <div className="state-container">
-            <div className="spinner" />
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
-              Querying Elexon BMRS Wind Intelligence API...
-            </p>
+          <div style={{ padding: '60px', textAlign: 'center', color: '#8b949e', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
+            <span style={{ color: '#58a6ff' }}>[QUERYING ELEXON BMRS STREAM...]</span>
           </div>
         )}
 
@@ -112,34 +116,27 @@ export function App() {
         )}
       </main>
 
-      <footer className="app-footer">
-        <div className="footer-left">
-          <span style={{ fontWeight: 600, color: '#f8fafc' }}>WindGrid v1.0</span>
-          <span>•</span>
-          <span>Scope: GB National Wind Power Forecasts (January 2026 Decisions)</span>
-          <span>•</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <ShieldCheck size={13} color="#10b981" />
-            Strict Day-Ahead Gate Closure Enforcement (Zero Look-Ahead Bias)
-          </span>
+      <footer className="terminal-footer">
+        <div>
+          <span>WINDGRID CORE | UK NATIONAL WIND INTELLIGENCE | DECISIONS: JAN 2026 | DATA: ELEXON FUELHH & WINDFOR</span>
         </div>
 
-        <div style={{ display: 'flex', gap: '16px' }}>
+        <div style={{ display: 'flex', gap: '14px' }}>
           <a
             href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/FUELHH/stream"
             target="_blank"
             rel="noreferrer"
-            className="footer-link"
+            className="footer-link-subtle"
           >
-            Elexon FUELHH <ExternalLink size={11} style={{ display: 'inline' }} />
+            FUELHH STREAM ↗
           </a>
           <a
             href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/WINDFOR/stream"
             target="_blank"
             rel="noreferrer"
-            className="footer-link"
+            className="footer-link-subtle"
           >
-            Elexon WINDFOR <ExternalLink size={11} style={{ display: 'inline' }} />
+            WINDFOR STREAM ↗
           </a>
         </div>
       </footer>

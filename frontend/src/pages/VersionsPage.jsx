@@ -8,15 +8,14 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
-import { History, Eye, ShieldCheck, AlertCircle } from 'lucide-react';
 
 const RUN_COLORS = [
-  '#0ea5e9', // Day-ahead / early
-  '#f59e0b', // Afternoon
-  '#a855f7', // Evening
-  '#ec4899', // Late night
-  '#06b6d4',
-  '#84cc16',
+  '#388bfd', // Blue
+  '#d29922', // Amber
+  '#a371f7', // Purple
+  '#f778ba', // Pink
+  '#38bdf8', // Cyan
+  '#7ee787', // Light green
 ];
 
 export const VersionsPage = ({ data, actualRecords = [] }) => {
@@ -35,7 +34,6 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
     );
   };
 
-  // Build combined dataset for chart: 48 intervals
   const chartData = actualRecords.map((rec) => {
     const pt = {
       settlementPeriod: rec.settlementPeriod,
@@ -51,108 +49,102 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
   });
 
   return (
-    <div>
-      {/* Banner */}
-      <div className="context-banner">
-        <div className="context-banner-left">
-          <div className="context-banner-icon">
-            <History size={20} />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      {/* Ticker */}
+      <div className="trading-ticker">
+        <div className="ticker-group">
+          <div className="ticker-item">
+            <span className="ticker-label">DECISION DATE:</span>
+            <span className="ticker-val">{data.decisionDate}</span>
           </div>
-          <div className="context-banner-text">
-            <h3>Retrospective Intraday Forecast Version Comparison</h3>
-            <p>
-              Inspect how wind forecasts evolved across different publication runs issued on decision date {data.decisionDate} for delivery on {data.deliveryDate}.
-            </p>
+          <div className="ticker-item">
+            <span className="ticker-label">DELIVERY DATE:</span>
+            <span className="ticker-val accent-blue">{data.deliveryDate}</span>
+          </div>
+          <div className="ticker-item">
+            <span className="ticker-label">PUBLICATION RUNS LOGGED:</span>
+            <span className="ticker-val tabular">{data.publicationRunsCount} RUNS</span>
           </div>
         </div>
 
-        <div className="context-pills">
-          <div className="pill">
-            <ShieldCheck size={13} color="#10b981" />
-            <span>Runs Published:</span>
-            <strong className="mono">{data.publicationRunsCount} Runs</strong>
-          </div>
+        <div className="ticker-group">
+          <span style={{ color: '#8b949e', fontSize: '10px' }}>
+            NOTE: RUNS AFTER 11:00 LONDON DISPLAYED EXCLUSIVELY FOR RETROSPECTIVE UNCERTAINTY ANALYSIS
+          </span>
         </div>
       </div>
 
-      {/* Notice */}
-      <div className="notice-box" style={{ marginBottom: '20px' }}>
-        <strong>Strict Anti-Look-Ahead Rule:</strong> Forecast runs published after the 11:00 London gate closure cutoff are displayed here strictly for retrospective evaluation. They are NEVER used to evaluate day-ahead auction performance.
-      </div>
+      {/* Main Panel */}
+      <div className="trading-panel">
+        <div className="trading-panel-header">
+          <span className="panel-title">
+            INTRADAY FORECAST RUN HORIZON EVOLUTION VS OUTTURN ACTUAL (MW)
+          </span>
+          <div className="panel-tools">
+            <span style={{ color: '#3fb950', fontWeight: 600 }}>● OUTTURN ACTUAL</span>
+            <span style={{ color: '#6e7681' }}>|</span>
+            <span style={{ color: '#8b949e', fontSize: '10px' }}>SELECT RUNS BELOW</span>
+          </div>
+        </div>
 
-      {/* Run Selector Chips */}
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
-        <span style={{ fontSize: '0.78rem', color: '#94a3b8', alignSelf: 'center' }}>
-          Select Runs to Display:
-        </span>
-        {runs.map((r, idx) => {
-          const isSelected = selectedRuns.includes(r.publishTimeUtc);
-          const color = RUN_COLORS[idx % RUN_COLORS.length];
-          const isPreCutoff = r.publishTimeUtc.includes('T02:') || r.publishTimeUtc.includes('T04:') || r.publishTimeUtc.includes('T07:') || r.publishTimeUtc.includes('T09:');
+        {/* Run Selector Chips */}
+        <div style={{ padding: '8px 12px', background: '#11151c', borderBottom: '1px solid #21262d', display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <span style={{ color: '#6e7681', fontSize: '10px', textTransform: 'uppercase', marginRight: '4px' }}>
+            TOGGLE RUN:
+          </span>
+          {runs.map((r, idx) => {
+            const isSelected = selectedRuns.includes(r.publishTimeUtc);
+            const color = RUN_COLORS[idx % RUN_COLORS.length];
+            const isPreCutoff = r.publishTimeUtc.includes('T02:') || r.publishTimeUtc.includes('T04:') || r.publishTimeUtc.includes('T07:') || r.publishTimeUtc.includes('T09:');
 
-          return (
-            <button
-              key={r.publishTimeUtc}
-              onClick={() => toggleRun(r.publishTimeUtc)}
-              className="quick-date-btn"
-              style={{
-                borderColor: isSelected ? color : 'var(--border-subtle)',
-                background: isSelected ? `${color}22` : 'var(--bg-surface-elevated)',
-                color: isSelected ? color : 'var(--text-secondary)',
-                fontWeight: isSelected ? 600 : 400,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-              }}
-            >
-              <span
+            return (
+              <button
+                key={r.publishTimeUtc}
+                onClick={() => toggleRun(r.publishTimeUtc)}
+                className="quick-btn"
                 style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  background: isSelected ? color : '#64748b',
+                  borderColor: isSelected ? color : '#30363d',
+                  background: isSelected ? `${color}22` : '#161b22',
+                  color: isSelected ? color : '#8b949e',
+                  fontWeight: isSelected ? 600 : 400,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '3px 8px',
                 }}
-              />
-              <span>{r.publishTimeUtc.slice(11, 16)} UTC</span>
-              {isPreCutoff && (
-                <span style={{ fontSize: '0.65rem', background: 'rgba(16,185,129,0.2)', color: '#10b981', padding: '1px 4px', borderRadius: '3px' }}>
-                  Day-Ahead
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Multi-Line Chart */}
-      <div className="chart-card">
-        <div className="chart-card-header">
-          <div className="chart-title-area">
-            <h2>Forecast Evolution vs Final Actual Generation</h2>
-            <p>Comparing multi-version publication runs against actual delivered wind generation.</p>
-          </div>
-
-          <div className="chart-legend-custom">
-            <div className="legend-item">
-              <span className="legend-color-dot" style={{ background: '#10b981' }} />
-              <span>Actual Generation (FUELHH)</span>
-            </div>
-          </div>
+              >
+                <span
+                  style={{
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    background: isSelected ? color : '#6e7681',
+                  }}
+                />
+                <span>{r.publishTimeUtc.slice(11, 16)} UTC</span>
+                {isPreCutoff && (
+                  <span style={{ fontSize: '9px', color: '#58a6ff', opacity: 0.9 }}>
+                    [DA]
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
 
-        <div style={{ width: '100%', height: 360 }}>
+        <div className="chart-body" style={{ height: 340 }}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.06)" />
+            <LineChart data={chartData} margin={{ top: 10, right: 12, left: -10, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#21262d" />
               <XAxis
                 dataKey="localTime"
-                stroke="#64748b"
-                tick={{ fill: '#94a3b8', fontSize: 11 }}
+                stroke="#484f58"
+                tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
                 interval={3}
               />
               <YAxis
-                stroke="#64748b"
-                tick={{ fill: '#94a3b8', fontSize: 11 }}
+                stroke="#484f58"
+                tick={{ fill: '#8b949e', fontSize: 10, fontFamily: 'var(--font-mono)' }}
                 tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
               />
               <Tooltip
@@ -160,21 +152,24 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
                   if (active && payload && payload.length) {
                     const d = payload[0].payload;
                     return (
-                      <div className="custom-tooltip">
-                        <div className="tooltip-time">
-                          SP {d.settlementPeriod} • {d.localTimeDisplay}
+                      <div className="terminal-tooltip">
+                        <div className="tooltip-header">
+                          SP {d.settlementPeriod} • {d.localTimeDisplay} London
                         </div>
-                        <div className="tooltip-row">
-                          <span style={{ color: '#10b981' }}>Actual Generation:</span>
-                          <strong className="mono">{d.actualGeneration?.toLocaleString() ?? '—'} MW</strong>
+                        <div className="tooltip-entry">
+                          <span style={{ color: '#3fb950' }}>ACTUAL:</span>
+                          <strong className="tabular" style={{ color: '#3fb950' }}>
+                            {d.actualGeneration?.toLocaleString() ?? '—'} MW
+                          </strong>
                         </div>
-                        {selectedRuns.map((pubUtc, idx) => {
+                        {selectedRuns.map((pubUtc) => {
                           const val = d[pubUtc];
-                          const color = RUN_COLORS[runs.findIndex((r) => r.publishTimeUtc === pubUtc) % RUN_COLORS.length];
+                          const runIdx = runs.findIndex((r) => r.publishTimeUtc === pubUtc);
+                          const color = RUN_COLORS[runIdx % RUN_COLORS.length];
                           return (
-                            <div key={pubUtc} className="tooltip-row" style={{ fontSize: '0.75rem' }}>
-                              <span style={{ color }}>Run {pubUtc.slice(11, 16)} UTC:</span>
-                              <span className="mono">{val !== null ? `${val.toLocaleString()} MW` : '—'}</span>
+                            <div key={pubUtc} className="tooltip-entry" style={{ fontSize: '10px' }}>
+                              <span style={{ color }}>{pubUtc.slice(11, 16)} UTC:</span>
+                              <span className="tabular">{val !== null ? `${val.toLocaleString()} MW` : '—'}</span>
                             </div>
                           );
                         })}
@@ -184,12 +179,12 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
                   return null;
                 }}
               />
-              {/* Actual Generation Line */}
+              {/* Actual Line */}
               <Line
                 type="monotone"
                 dataKey="actualGeneration"
-                stroke="#10b981"
-                strokeWidth={3}
+                stroke="#2ea043"
+                strokeWidth={2.5}
                 dot={false}
                 name="Actual"
               />
@@ -204,7 +199,7 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
                     type="monotone"
                     dataKey={pubUtc}
                     stroke={color}
-                    strokeWidth={1.8}
+                    strokeWidth={1.5}
                     dot={false}
                     name={`Run ${pubUtc.slice(11, 16)} UTC`}
                   />
