@@ -10,12 +10,12 @@ import {
 } from 'recharts';
 
 const RUN_PALETTE = [
-  '#111418', // Matte black
-  '#0f766e', // Teal
-  '#b45309', // Amber
-  '#4338ca', // Indigo
-  '#be123c', // Crimson
-  '#64748b', // Slate
+  '#38bdf8', // Luminous Cyan
+  '#60a5fa', // Cobalt Sky
+  '#fbbf24', // Amber
+  '#818cf8', // Indigo
+  '#f43f5e', // Rose
+  '#94a3b8', // Slate
 ];
 
 export const VersionsPage = ({ data, actualRecords = [] }) => {
@@ -77,7 +77,7 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
 
           <div className="chart-legend-editorial">
             <span>
-              <span className="legend-indicator" style={{ background: '#0f766e' }} />
+              <span className="legend-indicator" style={{ background: '#2dd4bf', boxShadow: '0 0 8px #2dd4bf' }} />
               Actual Output
             </span>
           </div>
@@ -85,7 +85,7 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
 
         {/* Toggle Pills */}
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
-          <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280', alignSelf: 'center', marginRight: '6px' }}>
+          <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#94a3b8', alignSelf: 'center', marginRight: '6px' }}>
             Toggle Runs:
           </span>
           {runs.map((r, idx) => {
@@ -102,19 +102,20 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
                 key={r.publishTimeUtc}
                 onClick={() => toggleRun(r.publishTimeUtc)}
                 style={{
-                  background: isSelected ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.35)',
-                  border: isSelected ? `2px solid ${color}` : '1px solid rgba(255, 255, 255, 0.65)',
+                  background: isSelected ? 'rgba(30, 58, 138, 0.45)' : 'rgba(15, 28, 52, 0.45)',
+                  border: isSelected ? `2px solid ${color}` : '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '9999px',
                   padding: '4px 12px',
                   fontSize: '11px',
                   fontWeight: 700,
                   fontFamily: 'var(--font-helvetica)',
-                  color: isSelected ? color : '#6b7280',
+                  color: isSelected ? color : '#94a3b8',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
                   transition: 'all 0.15s ease',
+                  boxShadow: isSelected ? `0 0 12px ${color}33` : 'none',
                 }}
               >
                 <span
@@ -122,12 +123,12 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
                     width: '6px',
                     height: '6px',
                     borderRadius: '50%',
-                    background: isSelected ? color : '#9ca3af',
+                    background: isSelected ? color : '#64748b',
                   }}
                 />
                 <span className="mono">{r.publishTimeUtc.slice(11, 16)} UTC</span>
                 {isPreCutoff && (
-                  <span style={{ fontSize: '9px', color: '#0f766e', fontWeight: 800 }}>
+                  <span style={{ fontSize: '9px', color: '#2dd4bf', fontWeight: 800 }}>
                     [D-1]
                   </span>
                 )}
@@ -139,21 +140,21 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
         <div style={{ width: '100%', height: 340 }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 10, right: 12, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(15, 23, 42, 0.06)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
               <XAxis
                 dataKey="localTime"
-                stroke="#9ca3af"
-                tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                stroke="#64748b"
+                tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                 interval={3}
                 tickLine={false}
-                axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
               />
               <YAxis
-                stroke="#9ca3af"
-                tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                stroke="#64748b"
+                tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                 tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
                 tickLine={false}
-                axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
               />
               <Tooltip
                 content={({ active, payload }) => {
@@ -165,7 +166,7 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
                           SP {d.settlementPeriod} • {d.localTimeDisplay}
                         </div>
                         <div className="tooltip-row-item">
-                          <span style={{ color: '#0f766e', fontWeight: 600 }}>Actual Output:</span>
+                          <span style={{ color: '#2dd4bf', fontWeight: 600 }}>Actual Output:</span>
                           <strong className="tabular">{d.actualGeneration?.toLocaleString() ?? '—'} MW</strong>
                         </div>
                         {selectedRuns.map((pubUtc) => {
@@ -175,7 +176,7 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
                           return (
                             <div key={pubUtc} className="tooltip-row-item" style={{ fontSize: '11px' }}>
                               <span style={{ color }}>Run {pubUtc.slice(11, 16)} UTC:</span>
-                              <span className="tabular">{val !== null ? `${val.toLocaleString()} MW` : '—'}</span>
+                              <span className="tabular" style={{ color: '#ffffff' }}>{val !== null ? `${val.toLocaleString()} MW` : '—'}</span>
                             </div>
                           );
                         })}
@@ -189,7 +190,7 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
               <Line
                 type="monotone"
                 dataKey="actualGeneration"
-                stroke="#0f766e"
+                stroke="#2dd4bf"
                 strokeWidth={2.4}
                 dot={false}
                 name="Actual"

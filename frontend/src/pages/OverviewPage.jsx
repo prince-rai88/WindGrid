@@ -126,7 +126,7 @@ export const OverviewPage = ({ data }) => {
 
           <div className="chart-legend-editorial">
             <span>
-              <span className="legend-indicator" style={{ background: '#111418' }} />
+              <span className="legend-indicator" style={{ background: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
               Forecast Generation (MW)
             </span>
           </div>
@@ -137,32 +137,32 @@ export const OverviewPage = ({ data }) => {
             <AreaChart data={data.series} margin={{ top: 10, right: 12, left: -10, bottom: 0 }}>
               <defs>
                 <linearGradient id="editorialGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#111418" stopOpacity={0.18} />
-                  <stop offset="95%" stopColor="#111418" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.32} />
+                  <stop offset="95%" stopColor="#2563eb" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(15, 23, 42, 0.06)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
               <XAxis
                 dataKey="localTime"
-                stroke="#9ca3af"
-                tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                stroke="#64748b"
+                tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                 interval={3}
                 tickLine={false}
-                axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
               />
               <YAxis
-                stroke="#9ca3af"
-                tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                stroke="#64748b"
+                tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                 tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
                 tickLine={false}
-                axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
               />
               <Tooltip content={<CustomOverviewTooltip />} />
               <Area
                 type="monotone"
                 dataKey="forecastGeneration"
-                stroke="#111418"
-                strokeWidth={2.4}
+                stroke="#38bdf8"
+                strokeWidth={2.6}
                 fillOpacity={1}
                 fill="url(#editorialGrad)"
                 name="Forecast"
@@ -205,20 +205,20 @@ export const OverviewPage = ({ data }) => {
               <tbody>
                 {data.series.map((row) => (
                   <tr key={row.settlementPeriod}>
-                    <td style={{ fontWeight: 700, color: '#111418' }}>
+                    <td style={{ fontWeight: 700, color: '#38bdf8' }}>
                       #{row.settlementPeriod}
                     </td>
                     <td>{row.localTimeDisplay}</td>
-                    <td style={{ color: '#9ca3af', fontSize: '12px' }} className="mono">{row.startTime}</td>
+                    <td style={{ color: '#64748b', fontSize: '12px' }} className="mono">{row.startTime}</td>
                     <td
                       className="tabular"
-                      style={{ textAlign: 'right', fontWeight: 700, color: '#111418' }}
+                      style={{ textAlign: 'right', fontWeight: 700, color: '#ffffff' }}
                     >
                       {row.forecastGeneration !== null
                         ? `${row.forecastGeneration.toLocaleString()} MW`
                         : '—'}
                     </td>
-                    <td style={{ color: '#4b5563', fontSize: '12px' }}>
+                    <td style={{ color: '#94a3b8', fontSize: '12px' }}>
                       {row.publishTime || 'Unavailable'}
                     </td>
                   </tr>

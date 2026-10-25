@@ -160,11 +160,11 @@ export const AccuracyPage = ({ data }) => {
 
             <div className="chart-legend-editorial">
               <span>
-                <span className="legend-indicator" style={{ background: '#111418' }} />
+                <span className="legend-indicator" style={{ background: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
                 Forecast
               </span>
               <span>
-                <span className="legend-indicator" style={{ background: '#0f766e' }} />
+                <span className="legend-indicator" style={{ background: '#2dd4bf', boxShadow: '0 0 8px #2dd4bf' }} />
                 Actual
               </span>
             </div>
@@ -173,35 +173,35 @@ export const AccuracyPage = ({ data }) => {
           <div style={{ width: '100%', height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={data.records} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(15, 23, 42, 0.06)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
                 <XAxis
                   dataKey="localTime"
-                  stroke="#9ca3af"
-                  tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="#64748b"
+                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   interval={3}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
                 />
                 <YAxis
-                  stroke="#9ca3af"
-                  tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="#64748b"
+                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
                 />
                 <Tooltip content={<CustomAccuracyTooltip />} />
                 <Area
                   type="monotone"
                   dataKey="forecastGeneration"
-                  fill="rgba(17, 20, 24, 0.08)"
-                  stroke="#111418"
+                  fill="rgba(56, 189, 248, 0.14)"
+                  stroke="#38bdf8"
                   strokeWidth={2}
                   name="Forecast"
                 />
                 <Line
                   type="monotone"
                   dataKey="actualGeneration"
-                  stroke="#0f766e"
+                  stroke="#2dd4bf"
                   strokeWidth={2.4}
                   dot={false}
                   name="Actual"
@@ -216,16 +216,16 @@ export const AccuracyPage = ({ data }) => {
           <div className="chart-card-header">
             <div>
               <h3 className="chart-heading-title">Half-Hourly Signed Error</h3>
-              <p className="chart-heading-sub">Formula: Forecast - Actual (Amber = Over, Blue = Under)</p>
+              <p className="chart-heading-sub">Formula: Forecast - Actual (Amber = Over, Cyan = Under)</p>
             </div>
 
             <div className="chart-legend-editorial">
-              <span style={{ color: '#b45309' }}>
-                <span className="legend-indicator" style={{ background: '#b45309' }} />
+              <span style={{ color: '#fbbf24' }}>
+                <span className="legend-indicator" style={{ background: '#fbbf24', boxShadow: '0 0 8px #fbbf24' }} />
                 Over (+MW)
               </span>
-              <span style={{ color: '#0284c7' }}>
-                <span className="legend-indicator" style={{ background: '#0284c7' }} />
+              <span style={{ color: '#38bdf8' }}>
+                <span className="legend-indicator" style={{ background: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
                 Under (-MW)
               </span>
             </div>
@@ -234,23 +234,23 @@ export const AccuracyPage = ({ data }) => {
           <div style={{ width: '100%', height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.records} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(15, 23, 42, 0.06)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
                 <XAxis
                   dataKey="localTime"
-                  stroke="#9ca3af"
-                  tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="#64748b"
+                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   interval={3}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
                 />
                 <YAxis
-                  stroke="#9ca3af"
-                  tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="#64748b"
+                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   tickFormatter={(val) => `${val > 0 ? `+${val}` : val}`}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
                 />
-                <ReferenceLine y={0} stroke="rgba(15, 23, 42, 0.2)" strokeWidth={1} />
+                <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.25)" strokeWidth={1} />
                 <Tooltip content={<CustomAccuracyTooltip />} />
                 <Bar dataKey="error" radius={[3, 3, 0, 0]}>
                   {data.records.map((entry, index) => (
@@ -259,8 +259,8 @@ export const AccuracyPage = ({ data }) => {
                       fill={
                         entry.error !== null
                           ? entry.error > 0
-                            ? '#b45309'
-                            : '#0284c7'
+                            ? '#fbbf24'
+                            : '#38bdf8'
                           : 'transparent'
                       }
                     />
@@ -303,18 +303,18 @@ export const AccuracyPage = ({ data }) => {
 
                 return (
                   <tr key={row.settlementPeriod}>
-                    <td style={{ fontWeight: 700, color: '#111418' }}>
+                    <td style={{ fontWeight: 700, color: '#38bdf8' }}>
                       #{row.settlementPeriod}
                     </td>
                     <td>{row.localTimeDisplay}</td>
-                    <td className="tabular" style={{ textAlign: 'right', color: '#111418', fontWeight: 600 }}>
+                    <td className="tabular" style={{ textAlign: 'right', color: '#ffffff', fontWeight: 600 }}>
                       {row.forecastGeneration !== null
                         ? `${row.forecastGeneration.toLocaleString()} MW`
                         : '—'}
                     </td>
                     <td
                       className="tabular"
-                      style={{ textAlign: 'right', fontWeight: 600, color: '#0f766e' }}
+                      style={{ textAlign: 'right', fontWeight: 600, color: '#2dd4bf' }}
                     >
                       {row.actualGeneration !== null
                         ? `${row.actualGeneration.toLocaleString()} MW`
@@ -325,14 +325,14 @@ export const AccuracyPage = ({ data }) => {
                       style={{
                         textAlign: 'right',
                         fontWeight: 700,
-                        color: isRowOver ? '#b45309' : isRowUnder ? '#0284c7' : '#4b5563',
+                        color: isRowOver ? '#fbbf24' : isRowUnder ? '#38bdf8' : '#94a3b8',
                       }}
                     >
                       {row.error !== null
                         ? `${row.error > 0 ? `+${row.error.toLocaleString()}` : row.error.toLocaleString()} MW`
                         : '—'}
                     </td>
-                    <td className="tabular" style={{ textAlign: 'right', color: '#6b7280' }}>
+                    <td className="tabular" style={{ textAlign: 'right', color: '#94a3b8' }}>
                       {row.absError !== null ? `${row.absError.toLocaleString()} MW` : '—'}
                     </td>
                     <td style={{ textAlign: 'center' }}>

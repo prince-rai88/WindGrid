@@ -102,11 +102,11 @@ export const HistoryPage = ({ data, onSelectDate }) => {
 
             <div className="chart-legend-editorial">
               <span>
-                <span className="legend-indicator" style={{ background: '#111418' }} />
+                <span className="legend-indicator" style={{ background: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
                 MAE (MW)
               </span>
               <span>
-                <span className="legend-indicator" style={{ background: '#64748b' }} />
+                <span className="legend-indicator" style={{ background: '#818cf8', boxShadow: '0 0 8px #818cf8' }} />
                 RMSE (MW)
               </span>
             </div>
@@ -115,20 +115,20 @@ export const HistoryPage = ({ data, onSelectDate }) => {
           <div style={{ width: '100%', height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={data.dailyResults} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(15, 23, 42, 0.06)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
                 <XAxis
                   dataKey="decisionDate"
-                  stroke="#9ca3af"
-                  tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="#64748b"
+                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   tickFormatter={(val) => val.slice(8)}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
                 />
                 <YAxis
-                  stroke="#9ca3af"
-                  tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="#64748b"
+                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
                 />
                 <Tooltip
                   content={({ active, payload }) => {
@@ -141,11 +141,11 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                           </div>
                           <div className="tooltip-row-item">
                             <span>MAE:</span>
-                            <strong>{d.mae} MW</strong>
+                            <strong style={{ color: '#38bdf8' }}>{d.mae} MW</strong>
                           </div>
                           <div className="tooltip-row-item">
                             <span>RMSE:</span>
-                            <strong>{d.rmse} MW</strong>
+                            <strong style={{ color: '#818cf8' }}>{d.rmse} MW</strong>
                           </div>
                         </div>
                       );
@@ -156,15 +156,15 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                 <Line
                   type="monotone"
                   dataKey="mae"
-                  stroke="#111418"
+                  stroke="#38bdf8"
                   strokeWidth={2.4}
-                  dot={{ r: 2, fill: '#111418' }}
+                  dot={{ r: 2, fill: '#38bdf8' }}
                   name="MAE"
                 />
                 <Line
                   type="monotone"
                   dataKey="rmse"
-                  stroke="#64748b"
+                  stroke="#818cf8"
                   strokeWidth={1.8}
                   dot={false}
                   name="RMSE"
@@ -179,16 +179,16 @@ export const HistoryPage = ({ data, onSelectDate }) => {
           <div className="chart-card-header">
             <div>
               <h3 className="chart-heading-title">Daily Forecast Bias</h3>
-              <p className="chart-heading-sub">Directional bias: Amber = Over (+MW), Blue = Under (-MW)</p>
+              <p className="chart-heading-sub">Directional bias: Amber = Over (+MW), Cyan = Under (-MW)</p>
             </div>
 
             <div className="chart-legend-editorial">
-              <span style={{ color: '#b45309' }}>
-                <span className="legend-indicator" style={{ background: '#b45309' }} />
+              <span style={{ color: '#fbbf24' }}>
+                <span className="legend-indicator" style={{ background: '#fbbf24', boxShadow: '0 0 8px #fbbf24' }} />
                 Over
               </span>
-              <span style={{ color: '#0284c7' }}>
-                <span className="legend-indicator" style={{ background: '#0284c7' }} />
+              <span style={{ color: '#38bdf8' }}>
+                <span className="legend-indicator" style={{ background: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
                 Under
               </span>
             </div>
@@ -197,23 +197,23 @@ export const HistoryPage = ({ data, onSelectDate }) => {
           <div style={{ width: '100%', height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.dailyResults} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(15, 23, 42, 0.06)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.07)" />
                 <XAxis
                   dataKey="decisionDate"
-                  stroke="#9ca3af"
-                  tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="#64748b"
+                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   tickFormatter={(val) => val.slice(8)}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
                 />
                 <YAxis
-                  stroke="#9ca3af"
-                  tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
+                  stroke="#64748b"
+                  tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                   tickFormatter={(val) => `${val > 0 ? `+${val}` : val}`}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
+                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.12)' }}
                 />
-                <ReferenceLine y={0} stroke="rgba(15, 23, 42, 0.2)" strokeWidth={1} />
+                <ReferenceLine y={0} stroke="rgba(255, 255, 255, 0.25)" strokeWidth={1} />
                 <Tooltip
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
@@ -225,7 +225,7 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                           </div>
                           <div className="tooltip-row-item">
                             <span>Bias:</span>
-                            <strong style={{ color: d.bias > 0 ? '#b45309' : '#0284c7' }}>
+                            <strong style={{ color: d.bias > 0 ? '#fbbf24' : '#38bdf8' }}>
                               {d.bias > 0 ? `+${d.bias}` : d.bias} MW
                             </strong>
                           </div>
@@ -242,8 +242,8 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                       fill={
                         entry.bias !== null
                           ? entry.bias > 0
-                            ? '#b45309'
-                            : '#0284c7'
+                            ? '#fbbf24'
+                            : '#38bdf8'
                           : 'transparent'
                       }
                     />
@@ -286,14 +286,14 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                 const isOver = row.bias !== null && row.bias > 0;
                 return (
                   <tr key={row.decisionDate}>
-                    <td style={{ fontWeight: 700, color: '#111418' }}>
+                    <td style={{ fontWeight: 700, color: '#ffffff' }}>
                       {row.decisionDate}
                     </td>
                     <td>{row.deliveryDate}</td>
-                    <td className="tabular" style={{ textAlign: 'right', color: '#111418', fontWeight: 600 }}>
+                    <td className="tabular" style={{ textAlign: 'right', color: '#38bdf8', fontWeight: 600 }}>
                       {row.mae !== null ? `${row.mae} MW` : '—'}
                     </td>
-                    <td className="tabular" style={{ textAlign: 'right', color: '#64748b' }}>
+                    <td className="tabular" style={{ textAlign: 'right', color: '#818cf8' }}>
                       {row.rmse !== null ? `${row.rmse} MW` : '—'}
                     </td>
                     <td
@@ -301,7 +301,7 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                       style={{
                         textAlign: 'right',
                         fontWeight: 700,
-                        color: isOver ? '#b45309' : '#0284c7',
+                        color: isOver ? '#fbbf24' : '#38bdf8',
                       }}
                     >
                       {row.bias !== null ? `${row.bias > 0 ? `+${row.bias}` : row.bias} MW` : '—'}
@@ -309,10 +309,10 @@ export const HistoryPage = ({ data, onSelectDate }) => {
                     <td className="tabular" style={{ textAlign: 'right' }}>
                       {row.meanForecast !== null ? `${row.meanForecast.toLocaleString()} MW` : '—'}
                     </td>
-                    <td className="tabular" style={{ textAlign: 'right', fontWeight: 600, color: '#0f766e' }}>
+                    <td className="tabular" style={{ textAlign: 'right', fontWeight: 600, color: '#2dd4bf' }}>
                       {row.meanActual !== null ? `${row.meanActual.toLocaleString()} MW` : '—'}
                     </td>
-                    <td className="tabular" style={{ textAlign: 'center', color: '#6b7280' }}>
+                    <td className="tabular" style={{ textAlign: 'center', color: '#94a3b8' }}>
                       {row.matchedPeriods}/48
                     </td>
                     <td style={{ textAlign: 'center' }}>
