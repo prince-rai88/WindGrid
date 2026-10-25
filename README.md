@@ -16,7 +16,7 @@
   <strong>An enterprise-grade energy analytics platform engineered for UK electricity utility trading desks to inspect national wind generation forecasts, enforce Day-Ahead market gate closure rules without look-ahead bias, and quantitatively audit forecast accuracy against delivered outturn.</strong>
 </p>
 
-[Live Demo](#-deployment) • [Architecture](#-system-architecture) • [Market Timing Rules](#-market-timing--gate-closure-formulation) • [Quickstart](#-quickstart-guide) • [API Reference](#-api-specification)
+[🌐 Live Production Web App](https://wind-grid-drab.vercel.app/) • [Architecture](#-system-architecture) • [Market Timing Rules](#-market-timing--gate-closure-formulation) • [Quickstart](#-quickstart-guide) • [API Reference](#-api-specification)
 
 </div>
 
