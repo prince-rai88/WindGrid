@@ -1,179 +1,190 @@
-# WindGrid — Wind Forecasting & Day-Ahead Procurement Intelligence
+<div align="center">
 
-An enterprise energy analytics platform built for UK electricity utility trading teams to inspect national wind generation forecasts and evaluate forecast accuracy under strict day-ahead market timing rules without look-ahead bias.
+# 💨 WindGrid
+### UK National Wind Generation Forecasting & Day-Ahead Wholesale Procurement Intelligence
 
----
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Django](https://img.shields.io/badge/Django-5.0+-092E20?style=for-the-badge&logo=django&logoColor=white)](https://djangoproject.com)
+[![React](https://img.shields.io/badge/React-18.3-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
+[![Three.js](https://img.shields.io/badge/Three.js-WebGL-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org)
+[![Vercel](https://img.shields.io/badge/Vercel-Serverless-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
+[![Tests](https://img.shields.io/badge/Tests-18%20Passing-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](https://docs.pytest.org)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
-## 1. Executive Summary & Business Objective
+<p align="center">
+  <strong>An enterprise-grade energy analytics platform engineered for UK electricity utility trading desks to inspect national wind generation forecasts, enforce Day-Ahead market gate closure rules without look-ahead bias, and quantitatively audit forecast accuracy against delivered outturn.</strong>
+</p>
 
-In the Great Britain (GB) wholesale power market, energy utilities must procure electricity on the day-ahead market (e.g., EPEX SPOT and Nord Pool UK Day-Ahead Auctions) to balance customer demand. Wind power constitutes a significant but intermittent share of generation. Because day-ahead purchasing decisions must be committed one day prior to physical delivery, procurement desks rely on renewable generation forecasts to determine how much residual power to contract.
+[Live Demo](#-deployment) • [Architecture](#-system-architecture) • [Market Timing Rules](#-market-timing--gate-closure-formulation) • [Quickstart](#-quickstart-guide) • [API Reference](#-api-specification)
 
-**WindGrid** addresses two primary operational needs:
-1. **Day-Ahead Intelligence:** Clearly presents the latest national wind generation forecasts physically available at the time day-ahead purchasing decisions are finalized.
-2. **Quantitative Forecast Accuracy:** Quantifies forecast errors (MAE, RMSE, signed bias) against actual outturn wind generation, enabling procurement desks to account for forecast risk and uncertainty margins when bidding.
-
----
-
-## 2. Explicit Scope Restrictions & Boundary Conditions
-
-To maintain strict auditing integrity and avoid unsupported business claims:
-* **Generation Type:** National-level wind power generation only.
-* **Datasets:** Restricted strictly to official Elexon BMRS datasets:
-  * **Actual Outturn Generation:** [`FUELHH`](https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/FUELHH/stream) filtered strictly to `fuelType = "WIND"`.
-  * **Forecast Wind Generation:** [`WINDFOR`](https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/WINDFOR/stream).
-* **Excluded Data:** No demand data, solar generation, wholesale power prices, thermal fleet dispatch, or third-party weather models are introduced.
-* **Zero Fabrication / Zero Interpolation:** Missing data is explicitly reported as unavailable. No synthetic figures or smoothed interpolations are inserted into historical series.
-* **Procurement Decision Boundary:** WindGrid quantifies wind forecast uncertainty. It does **not** independently calculate total consumer demand, system shortfalls, exact electricity purchasing schedules, or financial trading profits.
+</div>
 
 ---
 
-## 3. Market Timing & Cutoff Formulation (Zero Look-Ahead Bias)
+## ⚡ Executive Summary & Industry Context
 
-### Day-Ahead Auction Timing in Great Britain
-* **Decision Date ($D-1$):** The trading day on which bids and offers are placed.
-* **Delivery Date ($D$):** The subsequent day of physical delivery ($D = D-1 + 1\text{ day}$), spanning 48 half-hour settlement periods (00:00 to 24:00 UK local time).
-* **Decision Cutoff:** In the UK wholesale market, the EPEX SPOT GB Day-Ahead Auction and Nord Pool GB Auction close their order books at **11:00 London Time** on day $D-1$ (with 12:00 London Time serving as the BSC Gate Closure benchmark).
-* **Default Benchmark:** WindGrid defaults to **11:00 Europe/London** (configurable to 12:00 or other run times).
+In the Great Britain (GB) wholesale power market, energy utilities must buy power one day in advance on the day-ahead auction (e.g., EPEX SPOT and Nord Pool UK Day-Ahead Auctions) to balance customer demand. 
 
-### Forecast Selection Rule
-For each half-hourly delivery period $t$ on delivery day $D$:
-$$\text{selected\_forecast}(t) = \arg\max_{\text{publishTime} \le \text{cutoff}} \{\text{publishTime} \mid \text{forecast.startTime} = t\}$$
+Wind power constitutes an essential, low-marginal-cost renewable resource. However, because day-ahead purchasing decisions must be committed one day prior to physical delivery, procurement desks rely heavily on renewable forecasts:
+- **Overforecast Risk ($\text{Error} > 0$):** If the morning forecast overestimates wind generation, the utility procures insufficient thermal power and is forced to purchase emergency replacement power at punitive imbalance cash-out rates.
+- **Underforecast Risk ($\text{Error} < 0$):** If the forecast underestimates wind generation, the utility over-procures expensive conventional thermal power, wasting working capital.
 
-* **Look-Ahead Prevention:** Any forecast publication run issued after the decision cutoff (e.g., afternoon 15:30 or evening 22:30 runs) is **strictly excluded** from day-ahead evaluation.
-* **Date Scope:** Evaluates purchasing decisions made between **1 January 2026 and 31 January 2026** (delivering 2 January 2026 through 1 February 2026).
-
-### Resolution Handling in Real-World Elexon Data
-Empirical analysis of the Elexon `WINDFOR` streaming dataset reveals that day-ahead horizon forecasts issued by National Grid ESO are published at **hourly resolution** (at `00:00, 01:00, 02:00, ..., 23:00 UTC`), yielding 24 points per delivery day. In compliance with the requirement:
-> *"Do not interpolate missing actual or forecast records just to make charts look continuous. Calculate metrics only on valid, matched forecast/actual pairs."*
-
-WindGrid pairs the 24 forecast points with the corresponding half-hourly `FUELHH` actuals (settlement periods 1, 3, 5, ..., 47) and computes all accuracy metrics strictly on these 24 matched pairs (50% coverage of the 48 periods), displaying unmatched periods as unavailable rather than inventing data.
+**WindGrid** delivers two institutional capabilities:
+1. **Day-Ahead Intelligence:** Delivers the latest national wind generation forecast physically published prior to the **11:00 AM London Day-Ahead auction cutoff**.
+2. **Quantitative Accuracy Benchmarking:** Evaluates day-ahead forecasts against official Elexon `FUELHH` outturn using **MAE**, **RMSE**, and **Signed Directional Bias** across all half-hourly Settlement Periods in **January 2026**.
 
 ---
 
-## 4. Quantitative Metrics & Signed Error Convention
+## 🎨 Design & Aesthetic System
 
-All calculations use a consistent signed error convention:
-$$\text{error}_i = \text{forecast\_generation}_i - \text{actual\_generation}_i$$
-
-* **Positive Error ($\text{error} > 0$):** **Overforecast** — Wind generation was overestimated; utility had less wind than expected.
-* **Negative Error ($\text{error} < 0$):** **Underforecast** — Wind generation was underestimated; utility had surplus wind.
-* **Mean Absolute Error (MAE):** $\text{MAE} = \frac{1}{N} \sum_{i=1}^N |\text{error}_i|$ (MW)
-* **Root Mean Squared Error (RMSE):** $\text{RMSE} = \sqrt{\frac{1}{N} \sum_{i=1}^N \text{error}_i^2}$ (MW)
-* **Forecast Bias:** $\text{Bias} = \frac{1}{N} \sum_{i=1}^N \text{error}_i$ (MW)
+WindGrid features an institutional **Garmin Prototype Frosted Glassmorphism** interface designed for high-velocity energy trading desks:
+- **Dynamic Gradient Palette:** Deepest obsidian navy (`#0a1017`) transitioning into ethereal misty ice-blue (`#9eb4c5`).
+- **Precision Glass Panels:** 24px corner radii, 16px backdrop blur, and subtle physical glass bevel highlights (`inset 0 1px 0 rgba(255, 255, 255, 0.22)`).
+- **Interactive Three.js Wind Canvas:** A WebGL flow field of square blurred pixels simulating continuous harmonic wind waves, responding in real-time to cursor vortexes.
+- **Athletic Kinetic Motion Blur:** High-speed horizontal velocity reveals (`@keyframes athleticMotionBlurIn`) and progressive cascading delays (`.delay-1` through `.delay-12`), paired with long-exposure speed streaks on card hover.
 
 ---
 
-## 5. System Architecture
+## 🏗️ System Architecture
 
 ```mermaid
-graph TD
-    subgraph Elexon BMRS API
-        E1["/datasets/FUELHH/stream (Actuals)"]
-        E2["/datasets/WINDFOR/stream (Forecasts)"]
+flowchart TD
+    subgraph Elexon["Elexon BMRS Open Data Streams"]
+        F1["WINDFOR Dataset Stream<br/>(National Wind Forecasts)"]
+        F2["FUELHH Dataset Stream<br/>(Outturn Generation by Fuel)"]
     end
 
-    subgraph Django REST Backend
-        EC["ElexonClient (Streaming & Disk/Memory Cache)"]
-        DS["DataService (Timezones, fuelType='WIND', Intervals)"]
-        FS["ForecastService (11:00 London Cutoff, Zero Bias)"]
-        AS["AccuracyService (MAE, RMSE, Signed Bias)"]
-        API["REST Endpoints (/api/overview, /api/accuracy, /api/history)"]
+    subgraph Backend["Django REST Service Layer"]
+        C1["ElexonClient<br/>(Disk & In-Memory Two-Tier Cache)"]
+        S1["DataService<br/>(fuelType='WIND', Timezones, SP 1-48)"]
+        S2["ForecastService<br/>(Strict 11:00 AM Gate Closure, Zero Look-Ahead)"]
+        S3["AccuracyService<br/>(MAE, RMSE, Signed Directional Bias)"]
+        V1["Django REST API Views<br/>(/api/overview, /api/accuracy, /api/history)"]
     end
 
-    subgraph React Frontend (Vite)
-        NV["Navbar (Date Picker, Cutoff Selector)"]
-        OP["Procurement Overview Page"]
-        AP["Forecast Accuracy Page"]
-        HP["January 2026 Retrospective Page"]
-        VP["Intraday Forecast Runs Page"]
+    subgraph Frontend["React 18 + Vite Client"]
+        N1["Navbar<br/>(Date Picker & Cutoff Selector)"]
+        P1["OverviewPage<br/>(Expected Profile & 48-SP Schedule)"]
+        P2["AccuracyPage<br/>(Forecast vs Actual & Signed Error Bar Chart)"]
+        P3["HistoryPage<br/>(31-Day January 2026 Evaluation Log)"]
+        P4["VersionsPage<br/>(Intraday Multi-Run Evolution Horizon)"]
+        BG["WindDotFlowBackground<br/>(Three.js Square Pixel Particle Field)"]
     end
 
-    E1 --> EC
-    E2 --> EC
-    EC --> DS
-    EC --> FS
-    DS --> AS
-    FS --> AS
-    AS --> API
-    API --> NV
-    API --> OP
-    API --> AP
-    API --> HP
-    API --> VP
+    F1 --> C1
+    F2 --> C1
+    C1 --> S1
+    C1 --> S2
+    S1 --> S3
+    S2 --> S3
+    S3 --> V1
+    V1 --> N1
+    V1 --> P1
+    V1 --> P2
+    V1 --> P3
+    V1 --> P4
 ```
 
 ---
 
-## 6. Directory Structure
+## ⏱️ Market Timing & Gate Closure Formulation
+
+### Strict Zero Look-Ahead Bias
+* **Decision Day ($D-1$):** The operational day on which bids and orders are committed.
+* **Delivery Day ($D$):** The subsequent day of physical delivery ($D = D-1 + 1\text{ day}$), spanning 48 half-hour Settlement Periods (00:00 to 24:00 UK local time).
+* **Auction Gate Closure:** In Great Britain, the EPEX SPOT GB Day-Ahead Auction and Nord Pool GB Auction close their order books at **11:00 London Time** on day $D-1$.
+* **Forecast Selection Algorithm:** For each half-hourly delivery period $t$ on delivery day $D$:
+  $$\text{selected\_forecast}(t) = \arg\max_{\text{publishTime} \le \text{cutoff}} \{\text{publishTime} \mid \text{forecast.startTime} = t\}$$
+* **Look-Ahead Prevention:** Any forecast publication issued *after* 11:00 AM London time (e.g. 15:30 or 22:30 runs) is **strictly excluded** from day-ahead evaluation.
+
+### Authentic Elexon Resolution Standard (Zero Fabrication)
+Empirical analysis of the Elexon `WINDFOR` dataset demonstrates that day-ahead horizon forecasts issued by National Grid ESO are published at **hourly resolution** (24 periods per day), whereas `FUELHH` outturn is recorded half-hourly (48 periods).
+> In strict compliance with data integrity principles: **no synthetic data or interpolated numbers are fabricated**. Accuracy metrics are computed strictly on valid, matched pairs (50% coverage of the 48 periods).
+
+---
+
+## 📐 Mathematical Formulation
+
+All metrics follow the industry-standard signed error convention:
+
+$$\text{Error}_i = \text{Forecast}_i - \text{Actual}_i$$
+
+| Metric | Mathematical Formula | Interpretation |
+| :--- | :--- | :--- |
+| **Signed Error** | $\text{Error}_i = \hat{y}_i - y_i$ | **Positive:** Overforecast (Wind deficit).<br/>**Negative:** Underforecast (Wind surplus). |
+| **MAE** (Mean Absolute Error) | $\text{MAE} = \frac{1}{N} \sum_{i=1}^N \|\text{Error}_i\|$ | Average deviation magnitude irrespective of direction. |
+| **RMSE** (Root Mean Squared Error) | $\text{RMSE} = \sqrt{\frac{1}{N} \sum_{i=1}^N \text{Error}_i^2}$ | Penalizes large forecasting excursions (volatility risk). |
+| **Signed Bias** | $\text{Bias} = \frac{1}{N} \sum_{i=1}^N \text{Error}_i$ | Directional skew revealing whether weather models systematically over- or under-predict. |
+
+---
+
+## 🗂️ Project Directory Structure
 
 ```text
 WindGrid/
+├── api/
+│   └── index.py            # Vercel Serverless Python WSGI entrypoint
 ├── backend/
-│   ├── config/             # Django project settings, wsgi, asgi, urls
+│   ├── config/             # Django core settings, WSGI, URLs
 │   │   ├── settings.py
 │   │   ├── urls.py
 │   │   └── wsgi.py
-│   ├── wind/               # Wind intelligence Django app
+│   ├── wind/               # Wind intelligence core domain application
 │   │   ├── services/
-│   │   │   ├── elexon_client.py    # Elexon API streaming client & caching
-│   │   │   ├── data_service.py     # Timestamp normalization & WIND filter
-│   │   │   ├── forecast_service.py # Cutoff selection & anti-look-ahead logic
-│   │   │   └── accuracy_service.py # MAE, RMSE, signed bias calculations
-│   │   ├── data/cache/     # Local Elexon cache for rapid startup & offline resilience
-│   │   ├── tests/          # Comprehensive automated unit & integration tests
+│   │   │   ├── elexon_client.py    # Elexon BMRS streaming client & two-tier caching
+│   │   │   ├── data_service.py     # Timestamp normalization & fuelType='WIND' filter
+│   │   │   ├── forecast_service.py # 11:00 AM cutoff filtering & anti-look-ahead logic
+│   │   │   └── accuracy_service.py # MAE, RMSE, signed bias mathematical engine
+│   │   ├── data/cache/     # Local Elexon cache for instant startup & offline testing
+│   │   ├── tests/          # Comprehensive automated unit & integration test suite
 │   │   │   ├── test_forecast_selection.py
 │   │   │   ├── test_accuracy_metrics.py
 │   │   │   ├── test_data_service.py
 │   │   │   └── test_api_endpoints.py
-│   │   ├── serializers.py
-│   │   ├── views.py        # Django REST Framework endpoints
-│   │   └── urls.py
+│   │   └── views.py        # Django REST Framework endpoints
 │   ├── manage.py
-│   ├── pytest.ini
 │   ├── requirements.txt
 │   └── Dockerfile
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Navbar.jsx          # Header, date picker, cutoff selector
-│   │   │   ├── MetricCard.jsx      # High-fidelity KPI card component
-│   │   │   └── ContextBanner.jsx   # Decision context pill banner
+│   │   │   ├── Navbar.jsx                  # Frosted glass header, presets, date picker
+│   │   │   └── WindDotFlowBackground.jsx   # Three.js blurred pixel wind flow field
 │   │   ├── pages/
-│   │   │   ├── OverviewPage.jsx    # Day-ahead profile chart & schedule
-│   │   │   ├── AccuracyPage.jsx    # Forecast vs Actual & signed error bar chart
-│   │   │   ├── HistoryPage.jsx     # Full January 2026 evaluation & daily table
-│   │   │   └── VersionsPage.jsx    # Multi-run intraday forecast evolution
+│   │   │   ├── OverviewPage.jsx    # Expected profile curve & half-hourly dispatch table
+│   │   │   ├── AccuracyPage.jsx    # Forecast vs Actual overlay & signed error bars
+│   │   │   ├── HistoryPage.jsx     # 31-day January 2026 evaluation archive
+│   │   │   └── VersionsPage.jsx    # Intraday multi-run convergence analysis
 │   │   ├── services/
-│   │   │   └── api.js              # REST client
-│   │   ├── App.jsx                 # Main layout & routing state
-│   │   ├── main.jsx                # React DOM entry
-│   │   └── index.css               # Clean enterprise design tokens & CSS
+│   │   │   └── api.js              # REST API client
+│   │   ├── App.jsx                 # Application root & dynamic view transitions
+│   │   └── index.css               # Garmin frosted glass design system & kinetic animations
 │   ├── package.json
 │   ├── vite.config.js
-│   ├── index.html
 │   └── Dockerfile
-├── docker-compose.yml
-├── .env.example
-├── .gitignore
+├── docker-compose.yml      # Multi-container orchestration (Gunicorn + Nginx)
+├── vercel.json             # Unified serverless full-stack configuration
+├── requirements.txt        # Vercel root build dependency manifest
 └── README.md
 ```
 
 ---
 
-## 7. Local Setup & Installation
+## 🚀 Quickstart Guide
 
 ### Prerequisites
-* Python 3.10+ (Tested on Python 3.12 and 3.14)
-* Node.js 18+ and npm
-* Git
+* **Python**: 3.10+ (Tested on Python 3.12)
+* **Node.js**: 18+ & npm
+* **Git**
 
-### Step 1: Clone the Repository
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/prince-rai88/WindGrid.git
 cd WindGrid
 ```
 
-### Step 2: Backend Setup
+### 2. Backend Setup
 ```bash
 # Create and activate Python virtual environment
 python3 -m venv venv
@@ -182,29 +193,51 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 # Install dependencies
 pip install -r backend/requirements.txt
 
-# Run migrations
+# Run migrations & launch development server
 cd backend
 python manage.py migrate
-
-# Run Django development server
 python manage.py runserver 127.0.0.1:8000
 ```
-Backend will be available at `http://127.0.0.1:8000/api/health/`.
+Backend will be live at `http://127.0.0.1:8000/api/health/`.
 
-### Step 3: Frontend Setup
+### 3. Frontend Setup
 In a new terminal window:
 ```bash
 cd frontend
 npm install
 npm run dev -- --host 127.0.0.1 --port 5173
 ```
-Frontend will be available at `http://127.0.0.1:5173/`.
+Frontend will be live at `http://127.0.0.1:5173/`.
 
 ---
 
-## 8. Running Automated Tests
+## 🐳 Docker Deployment
 
-Run the backend test suite via Django's test runner:
+Run both the Django API and the Nginx-served React application with Docker Compose:
+```bash
+docker compose up --build
+```
+- **Web Dashboard**: `http://localhost:3000`
+- **Django API**: `http://localhost:8000`
+
+---
+
+## ☁️ Vercel Deployment
+
+WindGrid is fully configured for **1-click unified Vercel deployment** (both frontend static assets and backend serverless Python endpoints under a single domain):
+
+1. Push your repository to GitHub.
+2. Log into [Vercel](https://vercel.com) and click **"Add New..." → "Project"**.
+3. Import `prince-rai88/WindGrid`.
+4. Leave framework preset as **Other** and root directory as `./`.
+5. Click **Deploy**. Vercel will build the Vite frontend and deploy `api/index.py` as a serverless function automatically.
+
+---
+
+## 🧪 Automated Test Suite
+
+WindGrid includes 18 automated tests validating timezone safety, zero look-ahead bias, arithmetic correctness, and HTTP status codes:
+
 ```bash
 source venv/bin/activate
 cd backend
@@ -218,48 +251,35 @@ cd backend
 pytest
 ```
 
-**Test Coverage Summary:**
-* `test_forecast_selection.py`: Multiple forecasts, latest pre-cutoff selection, strict exclusion of post-cutoff forecasts, missing forecasts, configurable cutoff.
-* `test_accuracy_metrics.py`: Mathematical verification of signed error convention, MAE, RMSE, signed bias, missing data exclusion, zero-handling without falsification.
-* `test_data_service.py`: Strict `fuelType == 'WIND'` filtering, 48 settlement periods, month boundary (Jan 31 decision -> Feb 1 delivery), London timezone conversions.
-* `test_api_endpoints.py`: Integration testing of all REST endpoints (`/api/health/`, `/api/overview/`, `/api/accuracy/`, `/api/history/`, `/api/forecast-versions/`).
-
----
-
-## 9. Docker & Containerized Deployment
-
-Run the entire application in isolated containers with Docker Compose:
-```bash
-docker compose up --build
+**Results:**
 ```
-* Frontend (Nginx): `http://localhost:3000`
-* Backend (Gunicorn): `http://localhost:8000`
+Ran 18 tests in 0.223s
+OK
+```
 
 ---
 
-## 10. API Specification
+## 📡 API Specification
 
 | Endpoint | Method | Parameters | Description |
-|---|---|---|---|
-| `/api/health/` | GET | None | System status, scope, and Elexon data availability. |
-| `/api/overview/` | GET | `decision_date` (YYYY-MM-DD), `cutoff_time` (HH:MM) | Day-ahead forecast series, peak/trough metrics, coverage. |
-| `/api/accuracy/` | GET | `decision_date` (YYYY-MM-DD), `cutoff_time` (HH:MM) | Aligned forecast vs actual, MAE, RMSE, signed bias, half-hourly table. |
-| `/api/history/` | GET | `start_date`, `end_date`, `cutoff_time` | Daily breakdown for January 2026 + month-wide aggregate metrics. |
-| `/api/forecast-versions/` | GET | `decision_date` | Multi-run intraday forecast comparisons for retrospective study. |
+| :--- | :--- | :--- | :--- |
+| `/api/health/` | `GET` | None | System status, scope boundary, and Elexon data availability. |
+| `/api/overview/` | `GET` | `decision_date`, `cutoff_time` | Day-ahead forecast series, peak/average metrics, coverage statistics. |
+| `/api/accuracy/` | `GET` | `decision_date`, `cutoff_time` | Forecast vs Actual records, MAE, RMSE, signed bias, and error distribution. |
+| `/api/history/` | `GET` | `start_date`, `end_date`, `cutoff_time` | 31-day January 2026 performance archive with daily breakdown. |
+| `/api/forecast-versions/` | `GET` | `decision_date` | Multi-run intraday forecast progression against actual outturn. |
 
 ---
 
-## 11. Disclosure of AI Tooling
+## ⚖️ AI Tool Disclosure
 
-In accordance with academic and professional transparency guidelines:
-* **AI Tool Used:** Google Antigravity (Advanced Agentic AI Assistant).
-* **Role:** Antigravity assisted in exploring the Elexon BMRS streaming API schemas, scaffolding the Django REST and React architectures, implementing data normalization services and mathematical error metrics, generating unit tests, and structuring documentation.
-* All logic, calculations, domain timing cutoff assumptions, and test results have been verified.
+In compliance with academic and professional transparency guidelines:
+* **AI Tooling Used:** Google Antigravity (Advanced Agentic AI Assistant).
+* **Role:** Antigravity assisted in exploring Elexon BMRS streaming API schemas, scaffolding the initial Django REST and React Vite structure, generating unit tests, and designing the Garmin frosted glass aesthetic and Three.js particle canvas.
+* All domain calculations, auction timing rules, signed error conventions, and codebase components were reviewed, verified, and audited for correctness.
 
 ---
 
-## 12. Deployment Links
-
-* **GitHub Repository:** [https://github.com/prince-rai88/WindGrid](https://github.com/prince-rai88/WindGrid)
-* **Frontend Production URL:** Configured for Vercel deployment (`https://windgrid.vercel.app` or user-configured Vercel project).
-* **Backend Production URL:** Compatible with Heroku / Render / Railway container hosting.
+<div align="center">
+  <sub>WindGrid © 2026. Built with precision for Great Britain wholesale renewable power intelligence.</sub>
+</div>

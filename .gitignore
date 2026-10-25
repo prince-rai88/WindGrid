@@ -35,10 +35,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# Environment
+# Environment & Private Presentation Assets
 .env
+.env.*
 .env.local
 .env.production
+DEMO_VIDEO_SCRIPT.md
 
 # IDEs
 .idea/
