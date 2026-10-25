@@ -4,6 +4,7 @@ import { OverviewPage } from './pages/OverviewPage';
 import { AccuracyPage } from './pages/AccuracyPage';
 import { HistoryPage } from './pages/HistoryPage';
 import { VersionsPage } from './pages/VersionsPage';
+import { WindDotFlowBackground } from './components/WindDotFlowBackground';
 import { api } from './services/api';
 
 export function App() {
@@ -64,6 +65,9 @@ export function App() {
 
   return (
     <div className="editorial-app">
+      {/* Three.js Continuous Low-Opacity Wind Dot Wave Background */}
+      <WindDotFlowBackground />
+
       {/* Top Subtle Editorial Ambient Bar */}
       <div className="top-ambient-bar">
         <div className="ambient-tag">

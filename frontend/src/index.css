@@ -291,6 +291,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 28px;
+  position: relative;
+  z-index: 2;
 }
 
 /* Editorial Section Header */
