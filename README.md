@@ -271,12 +271,12 @@ OK
 
 ---
 
-## ⚖️ AI Tool Disclosure
+## 🤖 AI Tool Disclosure
 
-In compliance with academic and professional transparency guidelines:
-* **AI Tooling Used:** Google Antigravity (Advanced Agentic AI Assistant).
-* **Role:** Antigravity assisted in exploring Elexon BMRS streaming API schemas, scaffolding the initial Django REST and React Vite structure, generating unit tests, and designing the Garmin frosted glass aesthetic and Three.js particle canvas.
-* All domain calculations, auction timing rules, signed error conventions, and codebase components were reviewed, verified, and audited for correctness.
+* **Tools Used:** Google Antigravity & ChatGPT (OpenAI).
+* **Where Used:**
+  * **Google Antigravity:** Repository scaffolding, Elexon BMRS streaming API integration, Django REST service layer, React frontend development (Three.js WebGL particle canvas, frosted glassmorphism, kinetic motion blur), and automated test suite implementation.
+  * **ChatGPT:** Domain research assistance for UK wholesale power auction gate closure mechanisms (EPEX SPOT & Nord Pool 11:00 AM London cutoff) and mathematical error metric formulas (MAE, RMSE, Signed Bias).
 
 ---
 
