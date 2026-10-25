@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wind, Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, Compass } from 'lucide-react';
 
 export const Navbar = ({
   decisionDate,
@@ -10,92 +10,89 @@ export const Navbar = ({
   setActiveTab,
 }) => {
   return (
-    <div className="nav-glass-container">
-      <header className="nav-glass-bar">
-        {/* Brand */}
-        <div className="brand-wrap">
-          <div className="brand-icon-jewel">
-            <Wind size={16} strokeWidth={2.4} />
+    <header className="editorial-navbar">
+      <div className="navbar-glass-panel">
+        {/* Top Header Row */}
+        <div className="navbar-top-row">
+          {/* Brand Identity */}
+          <div className="editorial-brand">
+            <span className="brand-main-title">WINDGRID</span>
+            <span className="brand-sub-label">// UTILITY PROCUREMENT INTELLIGENCE</span>
           </div>
-          <div className="brand-title">
-            <span>WindGrid</span>
-            <span className="brand-tag-jewel">UK Power</span>
+
+          {/* Date & Market Timing Controls */}
+          <div className="navbar-controls">
+            {/* Quick Date Presets */}
+            <div style={{ display: 'flex', gap: '6px' }}>
+              {['2026-01-01', '2026-01-15', '2026-01-31'].map((dt) => (
+                <button
+                  key={dt}
+                  className={`date-preset-pill ${decisionDate === dt ? 'active' : ''}`}
+                  onClick={() => setDecisionDate(dt)}
+                >
+                  {dt === '2026-01-01' ? '01 JAN' : dt === '2026-01-15' ? '15 JAN' : '31 JAN'}
+                </button>
+              ))}
+            </div>
+
+            {/* Date Picker Capsule */}
+            <div className="glass-pill-control">
+              <Calendar size={13} strokeWidth={2.2} color="#111418" />
+              <input
+                type="date"
+                className="mono"
+                value={decisionDate}
+                min="2026-01-01"
+                max="2026-01-31"
+                onChange={(e) => {
+                  if (e.target.value) setDecisionDate(e.target.value);
+                }}
+              />
+            </div>
+
+            {/* Cutoff Selector Capsule */}
+            <div className="glass-pill-control">
+              <Clock size={13} strokeWidth={2.2} color="#4b5563" />
+              <select
+                value={cutoffTime}
+                onChange={(e) => setCutoffTime(e.target.value)}
+              >
+                <option value="11:00">11:00 AM (UK Day-Ahead Gate Closure)</option>
+                <option value="12:00">12:00 PM (BSC Benchmark Run)</option>
+                <option value="09:30">09:30 AM (Early Morning Run)</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        {/* Segmented Pill Tabs */}
-        <nav className="tabs-pill-wrap">
+        {/* Navigation Tabs Row */}
+        <div className="navbar-tabs-row">
           <button
-            className={`tab-pill-btn ${activeTab === 'overview' ? 'active' : ''}`}
+            className={`nav-glass-tab ${activeTab === 'overview' ? 'active' : ''}`}
             onClick={() => setActiveTab('overview')}
           >
-            Overview
+            01 // Day-Ahead Forecast
           </button>
           <button
-            className={`tab-pill-btn ${activeTab === 'accuracy' ? 'active' : ''}`}
+            className={`nav-glass-tab ${activeTab === 'accuracy' ? 'active' : ''}`}
             onClick={() => setActiveTab('accuracy')}
           >
-            Forecast Accuracy
+            02 // Quantitative Accuracy
           </button>
           <button
-            className={`tab-pill-btn ${activeTab === 'history' ? 'active' : ''}`}
+            className={`nav-glass-tab ${activeTab === 'history' ? 'active' : ''}`}
             onClick={() => setActiveTab('history')}
           >
-            January 2026
+            03 // January 2026 Archive
           </button>
           <button
-            className={`tab-pill-btn ${activeTab === 'versions' ? 'active' : ''}`}
+            className={`nav-glass-tab ${activeTab === 'versions' ? 'active' : ''}`}
             onClick={() => setActiveTab('versions')}
           >
-            Intraday Runs
+            04 // Intraday Run Evolution
           </button>
-        </nav>
-
-        {/* Floating Controls */}
-        <div className="controls-glass-group">
-          {/* Quick Date Chips */}
-          <div style={{ display: 'flex', gap: '3px' }}>
-            {['2026-01-01', '2026-01-15', '2026-01-31'].map((dt) => (
-              <button
-                key={dt}
-                className={`quick-chip ${decisionDate === dt ? 'active' : ''}`}
-                onClick={() => setDecisionDate(dt)}
-                title={`Select ${dt}`}
-              >
-                {dt === '2026-01-01' ? 'Jan 1' : dt === '2026-01-15' ? 'Jan 15' : 'Jan 31'}
-              </button>
-            ))}
-          </div>
-
-          {/* Date Picker */}
-          <div className="control-pill">
-            <Calendar size={13} color="#0284c7" />
-            <input
-              type="date"
-              className="mono"
-              value={decisionDate}
-              min="2026-01-01"
-              max="2026-01-31"
-              onChange={(e) => {
-                if (e.target.value) setDecisionDate(e.target.value);
-              }}
-            />
-          </div>
-
-          {/* Cutoff Selector */}
-          <div className="control-pill">
-            <Clock size={13} color="#059669" />
-            <select
-              value={cutoffTime}
-              onChange={(e) => setCutoffTime(e.target.value)}
-            >
-              <option value="11:00">11:00 London (GB Day-Ahead Gate Closure)</option>
-              <option value="12:00">12:00 London (BSC Indicative Stage)</option>
-              <option value="09:30">09:30 London (Morning Run Cutoff)</option>
-            </select>
-          </div>
         </div>
-      </header>
-    </div>
+      </div>
+    </header>
   );
 };

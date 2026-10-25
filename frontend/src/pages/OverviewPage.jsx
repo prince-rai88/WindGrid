@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -8,23 +8,22 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
-import { Wind, TrendingUp, Gauge } from 'lucide-react';
 
 const CustomOverviewTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div className="glass-tooltip-rich">
-        <div className="tooltip-time-rich">
-          SP {data.settlementPeriod} • {data.localTimeDisplay} London
+      <div className="glass-editorial-tooltip">
+        <div className="tooltip-top-label">
+          SP {data.settlementPeriod} • {data.localTimeDisplay}
         </div>
-        <div className="tooltip-val-row">
-          <span style={{ color: '#0284c7', fontWeight: 600 }}>Forecast Generation:</span>
-          <strong className="tabular" style={{ color: '#0284c7' }}>
+        <div className="tooltip-row-item">
+          <span>Forecast Wind:</span>
+          <strong>
             {data.forecastGeneration !== null ? `${data.forecastGeneration.toLocaleString()} MW` : 'Unavailable'}
           </strong>
         </div>
-        <div className="tooltip-val-row" style={{ fontSize: '11px', color: '#64748b' }}>
+        <div className="tooltip-row-item" style={{ fontSize: '11px', color: '#6b7280' }}>
           <span>Publication Run:</span>
           <span>{data.publishTime ? data.publishTime.slice(11, 16) + ' UTC' : '—'}</span>
         </div>
@@ -35,6 +34,8 @@ const CustomOverviewTooltip = ({ active, payload }) => {
 };
 
 export const OverviewPage = ({ data }) => {
+  const [showTable, setShowTable] = useState(false);
+
   if (!data) return null;
 
   const validSeries = data.series.filter((s) => s.forecastGeneration !== null);
@@ -48,133 +49,122 @@ export const OverviewPage = ({ data }) => {
       : null;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '26px' }}>
-      {/* Page Intro Header */}
-      <div className="page-intro">
-        <div className="page-title-wrap">
-          <h1>Day-Ahead Wind Forecast</h1>
-          <p>
-            National renewable forecast locked at day-ahead cutoff for delivery on{' '}
-            <strong>{data.deliveryDate}</strong>.
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+      {/* Editorial Section Header */}
+      <div className="editorial-header-block">
+        <div className="editorial-header-left">
+          <span className="editorial-index-label">01 // Day-Ahead Forecast</span>
+          <h2 className="editorial-title">National Wind Generation Profile</h2>
+          <p className="editorial-sub">
+            Day-ahead national wind output forecast published by National Grid ESO prior to gate closure, delivering on <strong>{data.deliveryDate}</strong>.
           </p>
         </div>
 
-        <div className="jewel-pill-row">
-          <div className="jewel-pill">
-            <span style={{ color: '#0284c7' }}>●</span>
-            <span>Decision:</span>
-            <strong>{data.decisionDate}</strong>
-          </div>
-          <div className="jewel-pill">
-            <span style={{ color: '#059669' }}>●</span>
-            <span>Cutoff:</span>
-            <strong>{data.decisionCutoffDisplay || '11:00 London'}</strong>
-          </div>
-          <div className="jewel-pill">
-            <span style={{ color: '#d97706' }}>●</span>
-            <span>Latest Run:</span>
-            <strong>{data.latestForecastPublicationDisplay || '—'}</strong>
-          </div>
+        <div className="editorial-meta-box">
+          <span>DECISION: <strong>{data.decisionDate}</strong></span>
+          <span>•</span>
+          <span>CUTOFF: <strong>{data.decisionCutoffDisplay || '11:00 AM London'}</strong></span>
+          <span>•</span>
+          <span>RUN: <strong>{data.latestForecastPublicationDisplay || '—'}</strong></span>
         </div>
       </div>
 
-      {/* 3 Core Vivid Metric Cards */}
-      <div className="metric-grid-rich">
-        <div className="metric-card-rich">
-          <div className="card-top-icon icon-cyan">
-            <Gauge size={18} strokeWidth={2.4} />
+      {/* 3 Metric Cards */}
+      <div className="editorial-kpi-grid">
+        <div className="kpi-glass-card">
+          <div className="kpi-card-top">
+            <span className="kpi-title">Expected Daily Average</span>
+            <span className="kpi-tag-code">[MEAN_MW]</span>
           </div>
-          <div className="card-label-rich">Expected Daily Mean</div>
-          <div className="card-value-row">
-            <span className="card-number-rich tabular" style={{ color: '#0284c7' }}>
+          <div className="kpi-val-row">
+            <span className="kpi-hero-number tabular">
               {avgGen ? avgGen.toLocaleString() : '—'}
             </span>
-            <span className="card-unit-rich">MW</span>
+            <span className="kpi-unit-label">MW</span>
           </div>
-          <div className="card-sub-rich">Average generation across 48 delivery periods</div>
+          <div className="kpi-footer-text">Average expected power generation across the 24-hour delivery horizon</div>
         </div>
 
-        <div className="metric-card-rich">
-          <div className="card-top-icon icon-emerald">
-            <TrendingUp size={18} strokeWidth={2.4} />
+        <div className="kpi-glass-card">
+          <div className="kpi-card-top">
+            <span className="kpi-title">Peak Forecast Output</span>
+            <span className="kpi-tag-code">[PEAK_MAX]</span>
           </div>
-          <div className="card-label-rich">Peak Forecast Output</div>
-          <div className="card-value-row">
-            <span className="card-number-rich tabular" style={{ color: '#059669' }}>
+          <div className="kpi-val-row">
+            <span className="kpi-hero-number tabular">
               {peakGen ? peakGen.toLocaleString() : '—'}
             </span>
-            <span className="card-unit-rich">MW</span>
+            <span className="kpi-unit-label">MW</span>
           </div>
-          <div className="card-sub-rich">
-            {peakItem ? `SP ${peakItem.settlementPeriod} (${peakItem.localTime} London)` : 'Peak output period'}
+          <div className="kpi-footer-text">
+            {peakItem ? `Settlement Period ${peakItem.settlementPeriod} (${peakItem.localTime})` : 'Peak forecast interval'}
           </div>
         </div>
 
-        <div className="metric-card-rich">
-          <div className="card-top-icon icon-indigo">
-            <Wind size={18} strokeWidth={2.4} />
+        <div className="kpi-glass-card">
+          <div className="kpi-card-top">
+            <span className="kpi-title">Forecast Coverage</span>
+            <span className="kpi-tag-code">[BMRS_STREAM]</span>
           </div>
-          <div className="card-label-rich">Schedule Coverage</div>
-          <div className="card-value-row">
-            <span className="card-number-rich tabular" style={{ color: '#4f46e5' }}>
+          <div className="kpi-val-row">
+            <span className="kpi-hero-number tabular">
               {data.forecastCoverageCount}
             </span>
-            <span className="card-unit-rich">/ {data.totalIntervals} periods ({data.forecastCoveragePercent}%)</span>
+            <span className="kpi-unit-label">/ {data.totalIntervals} periods ({data.forecastCoveragePercent}%)</span>
           </div>
-          <div className="card-sub-rich">Elexon WINDFOR hourly resolution stream</div>
+          <div className="kpi-footer-text">Elexon WINDFOR hourly stream resolution (no interpolated gaps)</div>
         </div>
       </div>
 
-      {/* Vivid Primary Chart */}
-      <div className="glass-panel-rich">
-        <div className="glass-panel-header">
-          <div className="panel-heading-rich">
-            <h2>Day-Ahead National Wind Generation Curve</h2>
-            <p>Half-hourly expected renewable generation across 48 delivery periods (MW)</p>
+      {/* Primary Generation Profile Chart */}
+      <div className="chart-glass-card">
+        <div className="chart-card-header">
+          <div>
+            <h3 className="chart-heading-title">Expected Generation Curve</h3>
+            <p className="chart-heading-sub">Half-hourly national wind forecast curve across 48 delivery periods (MW)</p>
           </div>
 
-          <div className="legend-rich-row">
+          <div className="chart-legend-editorial">
             <span>
-              <span className="legend-dot-rich" style={{ background: '#0284c7' }} />
+              <span className="legend-indicator" style={{ background: '#111418' }} />
               Forecast Generation (MW)
             </span>
           </div>
         </div>
 
-        <div style={{ width: '100%', height: 350 }}>
+        <div style={{ width: '100%', height: 340 }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data.series} margin={{ top: 10, right: 12, left: -10, bottom: 0 }}>
               <defs>
-                <linearGradient id="richCyanGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.32} />
-                  <stop offset="70%" stopColor="#10b981" stopOpacity={0.10} />
-                  <stop offset="98%" stopColor="#10b981" stopOpacity={0.0} />
+                <linearGradient id="editorialGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#111418" stopOpacity={0.18} />
+                  <stop offset="95%" stopColor="#111418" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(15, 23, 42, 0.06)" />
               <XAxis
                 dataKey="localTime"
-                stroke="#94a3b8"
-                tick={{ fill: '#64748b', fontSize: 11, fontWeight: 500 }}
+                stroke="#9ca3af"
+                tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                 interval={3}
                 tickLine={false}
-                axisLine={{ stroke: 'rgba(203, 213, 225, 0.6)' }}
+                axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
               />
               <YAxis
-                stroke="#94a3b8"
-                tick={{ fill: '#64748b', fontSize: 11, fontWeight: 500 }}
+                stroke="#9ca3af"
+                tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                 tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
                 tickLine={false}
-                axisLine={{ stroke: 'rgba(203, 213, 225, 0.6)' }}
+                axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
               />
               <Tooltip content={<CustomOverviewTooltip />} />
               <Area
                 type="monotone"
                 dataKey="forecastGeneration"
-                stroke="#0284c7"
-                strokeWidth={2.8}
+                stroke="#111418"
+                strokeWidth={2.4}
                 fillOpacity={1}
-                fill="url(#richCyanGrad)"
+                fill="url(#editorialGrad)"
                 name="Forecast"
               />
             </AreaChart>
@@ -182,50 +172,61 @@ export const OverviewPage = ({ data }) => {
         </div>
       </div>
 
-      {/* Half-Hourly Table */}
-      <div className="table-panel-rich">
-        <div className="table-header-glass">
-          <h3>Half-Hourly Dispatch Schedule — 48 Settlement Periods</h3>
-          <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 500 }}>
-            Delivery Date: <strong>{data.deliveryDate}</strong>
-          </span>
+      {/* Dispatch Schedule Audit Table */}
+      <div className="table-glass-card">
+        <div className="table-card-header">
+          <div>
+            <h3 className="table-card-title">Half-Hourly Dispatch Schedule (48 Settlement Periods)</h3>
+            <span style={{ fontSize: '12px', color: '#6b7280' }}>
+              Delivery Date: <strong>{data.deliveryDate}</strong>
+            </span>
+          </div>
+
+          <button
+            className="btn-editorial-inspect"
+            onClick={() => setShowTable(!showTable)}
+          >
+            {showTable ? 'Hide Table ▲' : 'View Full Table ▼'}
+          </button>
         </div>
 
-        <div className="table-scroll-rich">
-          <table className="rich-table">
-            <thead>
-              <tr>
-                <th style={{ width: '60px' }}>SP</th>
-                <th>London Time Window</th>
-                <th>UTC Start</th>
-                <th style={{ textAlign: 'right' }}>Forecast Generation</th>
-                <th>Publication Run</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.series.map((row) => (
-                <tr key={row.settlementPeriod}>
-                  <td style={{ fontWeight: 700, color: '#0284c7' }}>
-                    #{row.settlementPeriod}
-                  </td>
-                  <td style={{ fontWeight: 500 }}>{row.localTimeDisplay}</td>
-                  <td style={{ color: '#64748b', fontSize: '12px' }}>{row.startTime}</td>
-                  <td
-                    className="tabular"
-                    style={{ textAlign: 'right', fontWeight: 700, color: '#0f172a' }}
-                  >
-                    {row.forecastGeneration !== null
-                      ? `${row.forecastGeneration.toLocaleString()} MW`
-                      : '—'}
-                  </td>
-                  <td style={{ color: '#64748b', fontSize: '12px' }}>
-                    {row.publishTime || 'Unavailable'}
-                  </td>
+        {showTable && (
+          <div className="table-scroll-container">
+            <table className="editorial-table">
+              <thead>
+                <tr>
+                  <th style={{ width: '60px' }}>SP</th>
+                  <th>Delivery Window</th>
+                  <th>UTC Timestamp</th>
+                  <th style={{ textAlign: 'right' }}>Forecast Wind</th>
+                  <th>Publication Run</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {data.series.map((row) => (
+                  <tr key={row.settlementPeriod}>
+                    <td style={{ fontWeight: 700, color: '#111418' }}>
+                      #{row.settlementPeriod}
+                    </td>
+                    <td>{row.localTimeDisplay}</td>
+                    <td style={{ color: '#9ca3af', fontSize: '12px' }} className="mono">{row.startTime}</td>
+                    <td
+                      className="tabular"
+                      style={{ textAlign: 'right', fontWeight: 700, color: '#111418' }}
+                    >
+                      {row.forecastGeneration !== null
+                        ? `${row.forecastGeneration.toLocaleString()} MW`
+                        : '—'}
+                    </td>
+                    <td style={{ color: '#4b5563', fontSize: '12px' }}>
+                      {row.publishTime || 'Unavailable'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

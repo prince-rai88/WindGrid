@@ -9,13 +9,13 @@ import {
   CartesianGrid,
 } from 'recharts';
 
-const RUN_JEWEL_PALETTE = [
-  '#0284c7', // Electric Cyan (Day-Ahead locked run)
-  '#059669', // Emerald
-  '#d97706', // Amber
-  '#7c3aed', // Purple
-  '#db2777', // Magenta
-  '#475569', // Slate
+const RUN_PALETTE = [
+  '#111418', // Matte black
+  '#0f766e', // Teal
+  '#b45309', // Amber
+  '#4338ca', // Indigo
+  '#be123c', // Crimson
+  '#64748b', // Slate
 ];
 
 export const VersionsPage = ({ data, actualRecords = [] }) => {
@@ -49,54 +49,48 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '26px' }}>
-      {/* Header */}
-      <div className="page-intro">
-        <div className="page-title-wrap">
-          <h1>Intraday Forecast Runs</h1>
-          <p>
-            Retrospective analysis comparing how National Grid ESO forecast versions evolved prior to and following the 11:00 auction cutoff.
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+      {/* Editorial Header */}
+      <div className="editorial-header-block">
+        <div className="editorial-header-left">
+          <span className="editorial-index-label">04 // Intraday Run Evolution</span>
+          <h2 className="editorial-title">Forecast Version Progression</h2>
+          <p className="editorial-sub">
+            Tracking how National Grid ESO forecast versions updated chronologically relative to the 11:00 AM auction cutoff.
           </p>
         </div>
 
-        <div className="jewel-pill-row">
-          <div className="jewel-pill">
-            <span style={{ color: '#0284c7' }}>●</span>
-            <span>Runs Logged:</span>
-            <strong>{data.publicationRunsCount} Runs</strong>
-          </div>
-          <div className="jewel-pill">
-            <span style={{ color: '#059669' }}>●</span>
-            <span>Delivery:</span>
-            <strong>{data.deliveryDate}</strong>
-          </div>
+        <div className="editorial-meta-box">
+          <span>LOGGED: <strong>{data.publicationRunsCount} Runs</strong></span>
+          <span>•</span>
+          <span>DELIVERY: <strong>{data.deliveryDate}</strong></span>
         </div>
       </div>
 
-      {/* Spacious Multi-Line Chart Panel */}
-      <div className="glass-panel-rich">
-        <div className="glass-panel-header">
-          <div className="panel-heading-rich">
-            <h2>Multi-Run Horizon Evolution vs Actual Outturn</h2>
-            <p>Comparing forecast updates across publication horizons against delivered wind generation (MW)</p>
+      {/* Main Glass Chart Card */}
+      <div className="chart-glass-card">
+        <div className="chart-card-header">
+          <div>
+            <h3 className="chart-heading-title">Multi-Run Horizon vs Actual Outturn</h3>
+            <p className="chart-heading-sub">Comparing forecast version updates against delivered generation (MW)</p>
           </div>
 
-          <div className="legend-rich-row">
-            <span style={{ color: '#0f172a' }}>
-              <span className="legend-dot-rich" style={{ background: '#0f172a' }} />
-              Actual Outturn (FUELHH)
+          <div className="chart-legend-editorial">
+            <span>
+              <span className="legend-indicator" style={{ background: '#0f766e' }} />
+              Actual Output
             </span>
           </div>
         </div>
 
-        {/* Minimal Run Toggle Pills with Jewel Accents */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '22px' }}>
-          <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748b', alignSelf: 'center', marginRight: '6px' }}>
-            Toggle Horizon Runs:
+        {/* Toggle Pills */}
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+          <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280', alignSelf: 'center', marginRight: '6px' }}>
+            Toggle Runs:
           </span>
           {runs.map((r, idx) => {
             const isSelected = selectedRuns.includes(r.publishTimeUtc);
-            const color = RUN_JEWEL_PALETTE[idx % RUN_JEWEL_PALETTE.length];
+            const color = RUN_PALETTE[idx % RUN_PALETTE.length];
             const isPreCutoff =
               r.publishTimeUtc.includes('T02:') ||
               r.publishTimeUtc.includes('T04:') ||
@@ -108,33 +102,33 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
                 key={r.publishTimeUtc}
                 onClick={() => toggleRun(r.publishTimeUtc)}
                 style={{
-                  background: isSelected ? '#ffffff' : 'rgba(255, 255, 255, 0.6)',
-                  border: isSelected ? `2px solid ${color}` : '1px solid rgba(203, 213, 225, 0.7)',
+                  background: isSelected ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.35)',
+                  border: isSelected ? `2px solid ${color}` : '1px solid rgba(255, 255, 255, 0.65)',
                   borderRadius: '9999px',
-                  padding: '5px 14px',
-                  fontSize: '12px',
-                  fontWeight: isSelected ? 700 : 500,
-                  color: isSelected ? color : '#64748b',
+                  padding: '4px 12px',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  fontFamily: 'var(--font-helvetica)',
+                  color: isSelected ? color : '#6b7280',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  boxShadow: isSelected ? `0 4px 12px ${color}22` : 'none',
                   transition: 'all 0.15s ease',
                 }}
               >
                 <span
                   style={{
-                    width: '8px',
-                    height: '8px',
+                    width: '6px',
+                    height: '6px',
                     borderRadius: '50%',
-                    background: isSelected ? color : '#cbd5e1',
+                    background: isSelected ? color : '#9ca3af',
                   }}
                 />
-                <span>{r.publishTimeUtc.slice(11, 16)} UTC</span>
+                <span className="mono">{r.publishTimeUtc.slice(11, 16)} UTC</span>
                 {isPreCutoff && (
-                  <span style={{ fontSize: '10px', color: '#059669', fontWeight: 700 }}>
-                    [Day-Ahead]
+                  <span style={{ fontSize: '9px', color: '#0f766e', fontWeight: 800 }}>
+                    [D-1]
                   </span>
                 )}
               </button>
@@ -142,45 +136,45 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
           })}
         </div>
 
-        <div style={{ width: '100%', height: 350 }}>
+        <div style={{ width: '100%', height: 340 }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 10, right: 12, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.2)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(15, 23, 42, 0.06)" />
               <XAxis
                 dataKey="localTime"
-                stroke="#94a3b8"
-                tick={{ fill: '#64748b', fontSize: 11 }}
+                stroke="#9ca3af"
+                tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                 interval={3}
                 tickLine={false}
-                axisLine={{ stroke: 'rgba(203, 213, 225, 0.6)' }}
+                axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
               />
               <YAxis
-                stroke="#94a3b8"
-                tick={{ fill: '#64748b', fontSize: 11 }}
+                stroke="#9ca3af"
+                tick={{ fill: '#4b5563', fontSize: 11, fontFamily: 'var(--font-helvetica)' }}
                 tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
                 tickLine={false}
-                axisLine={{ stroke: 'rgba(203, 213, 225, 0.6)' }}
+                axisLine={{ stroke: 'rgba(15, 23, 42, 0.12)' }}
               />
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const d = payload[0].payload;
                     return (
-                      <div className="glass-tooltip-rich">
-                        <div className="tooltip-time-rich">
-                          SP {d.settlementPeriod} • {d.localTimeDisplay} London
+                      <div className="glass-editorial-tooltip">
+                        <div className="tooltip-top-label">
+                          SP {d.settlementPeriod} • {d.localTimeDisplay}
                         </div>
-                        <div className="tooltip-val-row">
-                          <span style={{ color: '#0f172a', fontWeight: 700 }}>Actual Outturn:</span>
+                        <div className="tooltip-row-item">
+                          <span style={{ color: '#0f766e', fontWeight: 600 }}>Actual Output:</span>
                           <strong className="tabular">{d.actualGeneration?.toLocaleString() ?? '—'} MW</strong>
                         </div>
                         {selectedRuns.map((pubUtc) => {
                           const val = d[pubUtc];
                           const runIdx = runs.findIndex((r) => r.publishTimeUtc === pubUtc);
-                          const color = RUN_JEWEL_PALETTE[runIdx % RUN_JEWEL_PALETTE.length];
+                          const color = RUN_PALETTE[runIdx % RUN_PALETTE.length];
                           return (
-                            <div key={pubUtc} className="tooltip-val-row" style={{ fontSize: '11px' }}>
-                              <span style={{ color, fontWeight: 600 }}>{pubUtc.slice(11, 16)} UTC:</span>
+                            <div key={pubUtc} className="tooltip-row-item" style={{ fontSize: '11px' }}>
+                              <span style={{ color }}>Run {pubUtc.slice(11, 16)} UTC:</span>
                               <span className="tabular">{val !== null ? `${val.toLocaleString()} MW` : '—'}</span>
                             </div>
                           );
@@ -191,12 +185,12 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
                   return null;
                 }}
               />
-              {/* Actual Outturn Line */}
+              {/* Actual Output Line */}
               <Line
                 type="monotone"
                 dataKey="actualGeneration"
-                stroke="#0f172a"
-                strokeWidth={2.8}
+                stroke="#0f766e"
+                strokeWidth={2.4}
                 dot={false}
                 name="Actual"
               />
@@ -204,14 +198,14 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
               {/* Version Lines */}
               {selectedRuns.map((pubUtc) => {
                 const runIdx = runs.findIndex((r) => r.publishTimeUtc === pubUtc);
-                const color = RUN_JEWEL_PALETTE[runIdx % RUN_JEWEL_PALETTE.length];
+                const color = RUN_PALETTE[runIdx % RUN_PALETTE.length];
                 return (
                   <Line
                     key={pubUtc}
                     type="monotone"
                     dataKey={pubUtc}
                     stroke={color}
-                    strokeWidth={2}
+                    strokeWidth={1.8}
                     dot={false}
                     name={`Run ${pubUtc.slice(11, 16)} UTC`}
                   />

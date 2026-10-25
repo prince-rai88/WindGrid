@@ -63,8 +63,20 @@ export function App() {
   };
 
   return (
-    <div className="rich-glass-app">
-      {/* Floating Rich Glass Navbar */}
+    <div className="editorial-app">
+      {/* Top Subtle Editorial Ambient Bar */}
+      <div className="top-ambient-bar">
+        <div className="ambient-tag">
+          <span className="ambient-cross">+</span>
+          <span>UK National Grid ESO // Elexon BMRS Stream</span>
+        </div>
+        <div className="ambient-tag">
+          <span>Sys: v1.26 // Production Release</span>
+          <span className="ambient-cross">+</span>
+        </div>
+      </div>
+
+      {/* Floating Low-Blur Glass Navbar */}
       <Navbar
         decisionDate={decisionDate}
         setDecisionDate={setDecisionDate}
@@ -74,16 +86,16 @@ export function App() {
         setActiveTab={setActiveTab}
       />
 
-      {/* Main Glass Canvas */}
-      <main className="main-canvas">
+      {/* Main Content Area */}
+      <main className="editorial-container">
         {error && (
           <div
+            className="glass-panel"
             style={{
-              padding: '16px 22px',
-              background: 'rgba(239, 68, 68, 0.08)',
-              border: '1px solid rgba(239, 68, 68, 0.25)',
-              borderRadius: 'var(--radius-md)',
-              color: '#b91c1c',
+              padding: '16px 20px',
+              border: '1px solid rgba(220, 38, 38, 0.3)',
+              background: 'rgba(254, 242, 242, 0.65)',
+              color: '#991b1b',
               fontSize: '13px',
               fontWeight: 600,
             }}
@@ -93,9 +105,9 @@ export function App() {
         )}
 
         {loading && (
-          <div className="glass-panel-rich" style={{ textAlign: 'center', padding: '60px' }}>
-            <span style={{ color: '#0284c7', fontWeight: 600, fontSize: '14px' }}>
-              Updating Elexon forecast intelligence...
+          <div className="glass-panel" style={{ textAlign: 'center', padding: '64px 20px' }}>
+            <span style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#111418' }}>
+              Updating Elexon BMRS Forecast Intelligence...
             </span>
           </div>
         )}
@@ -120,10 +132,10 @@ export function App() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="footer-glass-bar">
+      {/* Editorial Footer */}
+      <footer className="editorial-footer">
         <div>
-          <span>WindGrid • UK National Wind Generation Forecasting & Procurement Intelligence</span>
+          <span>WINDGRID • UK National Renewable Generation & Power Procurement Intelligence</span>
         </div>
 
         <div style={{ display: 'flex', gap: '20px' }}>
@@ -131,17 +143,17 @@ export function App() {
             href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/FUELHH/stream"
             target="_blank"
             rel="noreferrer"
-            className="footer-link-rich"
+            className="footer-link"
           >
-            Elexon FUELHH Stream ↗
+            BMRS FUELHH Actuals ↗
           </a>
           <a
             href="https://bmrs.elexon.co.uk/api-documentation/endpoint/datasets/WINDFOR/stream"
             target="_blank"
             rel="noreferrer"
-            className="footer-link-rich"
+            className="footer-link"
           >
-            Elexon WINDFOR Stream ↗
+            BMRS WINDFOR Forecast ↗
           </a>
         </div>
       </footer>
