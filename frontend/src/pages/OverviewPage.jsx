@@ -51,7 +51,7 @@ export const OverviewPage = ({ data }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
       {/* Editorial Section Header */}
-      <div className="editorial-header-block">
+      <div className="editorial-header-block motion-blur-in delay-1">
         <div className="editorial-header-left">
           <span className="editorial-index-label">01 // Day-Ahead Forecast</span>
           <h2 className="editorial-title">National Wind Generation Profile</h2>
@@ -71,7 +71,7 @@ export const OverviewPage = ({ data }) => {
 
       {/* 3 Metric Cards */}
       <div className="editorial-kpi-grid">
-        <div className="kpi-glass-card">
+        <div className="kpi-glass-card motion-blur-in delay-2">
           <div className="kpi-card-top">
             <span className="kpi-title" style={{ color: '#34d399' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399', boxShadow: '0 0 6px #34d399', display: 'inline-block' }} />
@@ -88,7 +88,7 @@ export const OverviewPage = ({ data }) => {
           <div className="kpi-footer-text">Average expected power generation across the 24-hour delivery horizon</div>
         </div>
 
-        <div className="kpi-glass-card">
+        <div className="kpi-glass-card motion-blur-in delay-3">
           <div className="kpi-card-top">
             <span className="kpi-title" style={{ color: '#60a5fa' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#60a5fa', boxShadow: '0 0 6px #60a5fa', display: 'inline-block' }} />
@@ -107,7 +107,7 @@ export const OverviewPage = ({ data }) => {
           </div>
         </div>
 
-        <div className="kpi-glass-card">
+        <div className="kpi-glass-card motion-blur-in delay-4">
           <div className="kpi-card-top">
             <span className="kpi-title" style={{ color: '#9eb4c5' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#9eb4c5', boxShadow: '0 0 6px #9eb4c5', display: 'inline-block' }} />
@@ -126,7 +126,7 @@ export const OverviewPage = ({ data }) => {
       </div>
 
       {/* Primary Generation Profile Chart */}
-      <div className="chart-glass-card">
+      <div className="chart-glass-card motion-blur-in delay-5">
         <div className="chart-card-header">
           <div>
             <h3 className="chart-heading-title">Expected Generation Curve</h3>
@@ -182,7 +182,7 @@ export const OverviewPage = ({ data }) => {
       </div>
 
       {/* Dispatch Schedule Audit Table */}
-      <div className="table-glass-card">
+      <div className="table-glass-card motion-blur-in delay-6">
         <div className="table-card-header">
           <div>
             <h3 className="table-card-title">Half-Hourly Dispatch Schedule (48 Settlement Periods)</h3>

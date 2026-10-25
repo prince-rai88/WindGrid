@@ -22,7 +22,7 @@ export const HistoryPage = ({ data, onSelectDate }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
       {/* Editorial Header */}
-      <div className="editorial-header-block">
+      <div className="editorial-header-block motion-blur-in delay-1">
         <div className="editorial-header-left">
           <span className="editorial-index-label">03 // January 2026 Archive</span>
           <h2 className="editorial-title">Monthly Performance Log</h2>
@@ -40,7 +40,7 @@ export const HistoryPage = ({ data, onSelectDate }) => {
 
       {/* 3 Metric Cards */}
       <div className="editorial-kpi-grid">
-        <div className="kpi-glass-card">
+        <div className="kpi-glass-card motion-blur-in delay-2">
           <div className="kpi-card-top">
             <span className="kpi-title">Monthly Average Error</span>
             <span className="kpi-tag-code">[MONTH_MAE]</span>
@@ -54,7 +54,7 @@ export const HistoryPage = ({ data, onSelectDate }) => {
           <div className="kpi-footer-text">Average day-ahead wind forecast deviation across all 31 January days</div>
         </div>
 
-        <div className="kpi-glass-card">
+        <div className="kpi-glass-card motion-blur-in delay-3">
           <div className="kpi-card-top">
             <span className="kpi-title">Monthly Volatility Risk</span>
             <span className="kpi-tag-code">[MONTH_RMSE]</span>
@@ -68,7 +68,7 @@ export const HistoryPage = ({ data, onSelectDate }) => {
           <div className="kpi-footer-text">Aggregate root mean square measure across 744 hourly benchmarks</div>
         </div>
 
-        <div className="kpi-glass-card">
+        <div className="kpi-glass-card motion-blur-in delay-4">
           <div className="kpi-card-top">
             <span className="kpi-title">Monthly Directional Bias</span>
             <span className="kpi-tag-code">[MONTH_BIAS]</span>
@@ -93,7 +93,7 @@ export const HistoryPage = ({ data, onSelectDate }) => {
       {/* Dual Charts Grid */}
       <div className="editorial-dual-grid">
         {/* Daily Error Trend */}
-        <div className="chart-glass-card">
+        <div className="chart-glass-card motion-blur-in delay-5">
           <div className="chart-card-header">
             <div>
               <h3 className="chart-heading-title">Daily Forecast Error (MAE & RMSE)</h3>
@@ -175,7 +175,7 @@ export const HistoryPage = ({ data, onSelectDate }) => {
         </div>
 
         {/* Daily Signed Bias */}
-        <div className="chart-glass-card">
+        <div className="chart-glass-card motion-blur-in delay-5">
           <div className="chart-card-header">
             <div>
               <h3 className="chart-heading-title">Daily Forecast Bias</h3>
@@ -256,7 +256,7 @@ export const HistoryPage = ({ data, onSelectDate }) => {
       </div>
 
       {/* 31-Day Table */}
-      <div className="table-glass-card">
+      <div className="table-glass-card motion-blur-in delay-6">
         <div className="table-card-header">
           <div>
             <h3 className="table-card-title">January 2026 Procurement Decision Archive (31 Days)</h3>

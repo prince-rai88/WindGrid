@@ -89,7 +89,7 @@ export function App() {
       />
 
       {/* Main Content Area */}
-      <main className="editorial-container">
+      <main className="editorial-container" key={activeTab}>
         {error && (
           <div
             className="glass-panel"

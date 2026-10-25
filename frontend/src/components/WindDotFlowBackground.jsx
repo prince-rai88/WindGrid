@@ -151,16 +151,21 @@ export const WindDotFlowBackground = () => {
 
         let targetY = wave1 + wave2 + windGust;
 
-        // Interactive cursor wind gust deflection
+        // Athletic velocity drift: subtle lateral shear proportional to wind wave velocity
+        const lateralShear = Math.cos(origZ * 0.02 + windSpeed * 1.4) * 4.2;
+        posArray[i3] = origX + lateralShear;
+
+        // Interactive cursor wind gust deflection & kinetic speed impulse
         if (mouseIntersection) {
           const dx = origX - mouseIntersection.x;
           const dz = origZ - mouseIntersection.z;
           const distSq = dx * dx + dz * dz;
-          const interactionRadiusSq = 90 * 90;
+          const interactionRadiusSq = 95 * 95;
 
           if (distSq < interactionRadiusSq) {
-            const factor = 1 - Math.sqrt(distSq) / 90;
-            targetY += factor * 28;
+            const factor = 1 - Math.sqrt(distSq) / 95;
+            targetY += factor * 30;
+            posArray[i3] += factor * 16; // directional kinetic speed impulse
           }
         }
 

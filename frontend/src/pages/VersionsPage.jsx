@@ -48,10 +48,19 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
     return pt;
   });
 
+  const preCutoffCount = runs.filter(
+    (r) =>
+      r.publishTimeUtc.includes('T02:') ||
+      r.publishTimeUtc.includes('T04:') ||
+      r.publishTimeUtc.includes('T07:') ||
+      r.publishTimeUtc.includes('T09:') ||
+      r.publishTimeUtc.includes('T10:')
+  ).length;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
       {/* Editorial Header */}
-      <div className="editorial-header-block">
+      <div className="editorial-header-block motion-blur-in delay-1">
         <div className="editorial-header-left">
           <span className="editorial-index-label">04 // Intraday Run Evolution</span>
           <h2 className="editorial-title">Forecast Version Progression</h2>
@@ -67,8 +76,62 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
         </div>
       </div>
 
+      {/* 3 Metric Cards */}
+      <div className="editorial-kpi-grid">
+        <div className="kpi-glass-card motion-blur-in delay-2">
+          <div className="kpi-card-top">
+            <span className="kpi-title" style={{ color: '#34d399' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399', boxShadow: '0 0 6px #34d399', display: 'inline-block' }} />
+              Total Logged Runs
+            </span>
+            <span className="kpi-tag-code">BMRS_ARCHIVE</span>
+          </div>
+          <div className="kpi-val-row">
+            <span className="kpi-hero-number tabular">
+              {data.publicationRunsCount}
+            </span>
+            <span className="kpi-unit-label">RUNS</span>
+          </div>
+          <div className="kpi-footer-text">Chronological WINDFOR model forecast batches captured for this delivery date</div>
+        </div>
+
+        <div className="kpi-glass-card motion-blur-in delay-3">
+          <div className="kpi-card-top">
+            <span className="kpi-title" style={{ color: '#60a5fa' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#60a5fa', boxShadow: '0 0 6px #60a5fa', display: 'inline-block' }} />
+              Auction Eligible Runs
+            </span>
+            <span className="kpi-tag-code">PRE_11:00_AM</span>
+          </div>
+          <div className="kpi-val-row">
+            <span className="kpi-hero-number tabular">
+              {preCutoffCount}
+            </span>
+            <span className="kpi-unit-label">ELIGIBLE</span>
+          </div>
+          <div className="kpi-footer-text">Forecast versions published strictly before the 11:00 AM London Day-Ahead gate closure</div>
+        </div>
+
+        <div className="kpi-glass-card motion-blur-in delay-4">
+          <div className="kpi-card-top">
+            <span className="kpi-title" style={{ color: '#9eb4c5' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#9eb4c5', boxShadow: '0 0 6px #9eb4c5', display: 'inline-block' }} />
+              Active Horizons Selected
+            </span>
+            <span className="kpi-tag-code">MULTI_TRACE</span>
+          </div>
+          <div className="kpi-val-row">
+            <span className="kpi-hero-number tabular">
+              {selectedRuns.length}
+            </span>
+            <span className="kpi-unit-label">/ {runs.length}</span>
+          </div>
+          <div className="kpi-footer-text">Interactive multi-run trajectories plotted simultaneously against actual outturn</div>
+        </div>
+      </div>
+
       {/* Main Glass Chart Card */}
-      <div className="chart-glass-card">
+      <div className="chart-glass-card motion-blur-in delay-5">
         <div className="chart-card-header">
           <div>
             <h3 className="chart-heading-title">Multi-Run Horizon vs Actual Outturn</h3>
@@ -84,7 +147,7 @@ export const VersionsPage = ({ data, actualRecords = [] }) => {
         </div>
 
         {/* Toggle Pills */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
+        <div className="motion-blur-in delay-6" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '20px' }}>
           <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#94a3b8', alignSelf: 'center', marginRight: '6px' }}>
             Toggle Runs:
           </span>

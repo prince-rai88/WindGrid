@@ -80,7 +80,7 @@ export const AccuracyPage = ({ data }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
       {/* Editorial Header */}
-      <div className="editorial-header-block">
+      <div className="editorial-header-block motion-blur-in delay-1">
         <div className="editorial-header-left">
           <span className="editorial-index-label">02 // Quantitative Evaluation</span>
           <h2 className="editorial-title">Forecast Accuracy Benchmark</h2>
@@ -98,7 +98,7 @@ export const AccuracyPage = ({ data }) => {
 
       {/* 3 Metric Cards */}
       <div className="editorial-kpi-grid">
-        <div className="kpi-glass-card">
+        <div className="kpi-glass-card motion-blur-in delay-2">
           <div className="kpi-card-top">
             <span className="kpi-title" style={{ color: '#60a5fa' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#60a5fa', boxShadow: '0 0 6px #60a5fa', display: 'inline-block' }} />
@@ -115,7 +115,7 @@ export const AccuracyPage = ({ data }) => {
           <div className="kpi-footer-text">Average magnitude of difference between forecast and real generation</div>
         </div>
 
-        <div className="kpi-glass-card">
+        <div className="kpi-glass-card motion-blur-in delay-3">
           <div className="kpi-card-top">
             <span className="kpi-title" style={{ color: '#818cf8' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#818cf8', boxShadow: '0 0 6px #818cf8', display: 'inline-block' }} />
@@ -132,7 +132,7 @@ export const AccuracyPage = ({ data }) => {
           <div className="kpi-footer-text">Penalizes large swings to quantify grid imbalance risk</div>
         </div>
 
-        <div className="kpi-glass-card">
+        <div className="kpi-glass-card motion-blur-in delay-4">
           <div className="kpi-card-top">
             <span className="kpi-title" style={{ color: isOver ? '#fcd34d' : '#34d399' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: isOver ? '#fcd34d' : '#34d399', boxShadow: isOver ? '0 0 6px #fcd34d' : '0 0 6px #34d399', display: 'inline-block' }} />
@@ -160,7 +160,7 @@ export const AccuracyPage = ({ data }) => {
       {/* Dual Charts Grid */}
       <div className="editorial-dual-grid">
         {/* Chart 1: Forecast vs Actual */}
-        <div className="chart-glass-card">
+        <div className="chart-glass-card motion-blur-in delay-5">
           <div className="chart-card-header">
             <div>
               <h3 className="chart-heading-title">Forecast vs Actual Outturn</h3>
@@ -221,7 +221,7 @@ export const AccuracyPage = ({ data }) => {
         </div>
 
         {/* Chart 2: Signed Error Distribution */}
-        <div className="chart-glass-card">
+        <div className="chart-glass-card motion-blur-in delay-5">
           <div className="chart-card-header">
             <div>
               <h3 className="chart-heading-title">Half-Hourly Signed Error</h3>
@@ -282,7 +282,7 @@ export const AccuracyPage = ({ data }) => {
       </div>
 
       {/* Half-Hourly Table */}
-      <div className="table-glass-card">
+      <div className="table-glass-card motion-blur-in delay-6">
         <div className="table-card-header">
           <div>
             <h3 className="table-card-title">Half-Hourly Error Evaluation Log (48 Periods)</h3>
