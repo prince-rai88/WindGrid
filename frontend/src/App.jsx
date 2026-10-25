@@ -68,15 +68,13 @@ export function App() {
       {/* Three.js Continuous Low-Opacity Wind Dot Wave Background */}
       <WindDotFlowBackground />
 
-      {/* Top Subtle Editorial Ambient Bar */}
+      {/* Top Subtle Editorial Ambient Bar (Garmin Prototype Style) */}
       <div className="top-ambient-bar">
         <div className="ambient-tag">
-          <span className="ambient-cross">+</span>
-          <span>UK National Grid ESO // Elexon BMRS Stream</span>
+          <span>PROTOTYPE / UK NATIONAL GRID DAY-AHEAD WIND INTELLIGENCE</span>
         </div>
         <div className="ambient-tag">
-          <span>Sys: v1.26 // Production Release</span>
-          <span className="ambient-cross">+</span>
+          <span>ELEXON BMRS · JANUARY 2026 BENCHMARK</span>
         </div>
       </div>
 

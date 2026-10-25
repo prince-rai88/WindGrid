@@ -73,8 +73,11 @@ export const OverviewPage = ({ data }) => {
       <div className="editorial-kpi-grid">
         <div className="kpi-glass-card">
           <div className="kpi-card-top">
-            <span className="kpi-title">Expected Daily Average</span>
-            <span className="kpi-tag-code">[MEAN_MW]</span>
+            <span className="kpi-title" style={{ color: '#34d399' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399', boxShadow: '0 0 6px #34d399', display: 'inline-block' }} />
+              Expected Daily Average
+            </span>
+            <span className="kpi-tag-code">SCHEDULED</span>
           </div>
           <div className="kpi-val-row">
             <span className="kpi-hero-number tabular">
@@ -87,8 +90,11 @@ export const OverviewPage = ({ data }) => {
 
         <div className="kpi-glass-card">
           <div className="kpi-card-top">
-            <span className="kpi-title">Peak Forecast Output</span>
-            <span className="kpi-tag-code">[PEAK_MAX]</span>
+            <span className="kpi-title" style={{ color: '#60a5fa' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#60a5fa', boxShadow: '0 0 6px #60a5fa', display: 'inline-block' }} />
+              Peak Forecast Output
+            </span>
+            <span className="kpi-tag-code">PEAK_MAX</span>
           </div>
           <div className="kpi-val-row">
             <span className="kpi-hero-number tabular">
@@ -103,8 +109,11 @@ export const OverviewPage = ({ data }) => {
 
         <div className="kpi-glass-card">
           <div className="kpi-card-top">
-            <span className="kpi-title">Forecast Coverage</span>
-            <span className="kpi-tag-code">[BMRS_STREAM]</span>
+            <span className="kpi-title" style={{ color: '#9eb4c5' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#9eb4c5', boxShadow: '0 0 6px #9eb4c5', display: 'inline-block' }} />
+              Forecast Coverage
+            </span>
+            <span className="kpi-tag-code">BMRS_STREAM</span>
           </div>
           <div className="kpi-val-row">
             <span className="kpi-hero-number tabular">

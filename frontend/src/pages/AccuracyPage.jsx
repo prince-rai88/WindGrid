@@ -100,8 +100,11 @@ export const AccuracyPage = ({ data }) => {
       <div className="editorial-kpi-grid">
         <div className="kpi-glass-card">
           <div className="kpi-card-top">
-            <span className="kpi-title">Mean Absolute Error</span>
-            <span className="kpi-tag-code">[MAE_MW]</span>
+            <span className="kpi-title" style={{ color: '#60a5fa' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#60a5fa', boxShadow: '0 0 6px #60a5fa', display: 'inline-block' }} />
+              Mean Absolute Error
+            </span>
+            <span className="kpi-tag-code">MAE_MW</span>
           </div>
           <div className="kpi-val-row">
             <span className="kpi-hero-number tabular">
@@ -114,8 +117,11 @@ export const AccuracyPage = ({ data }) => {
 
         <div className="kpi-glass-card">
           <div className="kpi-card-top">
-            <span className="kpi-title">Root Mean Squared Error</span>
-            <span className="kpi-tag-code">[RMSE_MW]</span>
+            <span className="kpi-title" style={{ color: '#818cf8' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#818cf8', boxShadow: '0 0 6px #818cf8', display: 'inline-block' }} />
+              Root Mean Squared Error
+            </span>
+            <span className="kpi-tag-code">RMSE_MW</span>
           </div>
           <div className="kpi-val-row">
             <span className="kpi-hero-number tabular">
@@ -128,8 +134,11 @@ export const AccuracyPage = ({ data }) => {
 
         <div className="kpi-glass-card">
           <div className="kpi-card-top">
-            <span className="kpi-title">Forecast Bias (Signed Error)</span>
-            <span className="kpi-tag-code">[BIAS_DIR]</span>
+            <span className="kpi-title" style={{ color: isOver ? '#fcd34d' : '#34d399' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: isOver ? '#fcd34d' : '#34d399', boxShadow: isOver ? '0 0 6px #fcd34d' : '0 0 6px #34d399', display: 'inline-block' }} />
+              Forecast Bias (Signed Error)
+            </span>
+            <span className="kpi-tag-code">BIAS_DIR</span>
           </div>
           <div className="kpi-val-row">
             <span

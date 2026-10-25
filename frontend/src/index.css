@@ -1,55 +1,60 @@
 /* ==========================================================================
-   WINDGRID — CINEMATIC OBSIDIAN TO MISTY STEEL-CYAN DESIGN SYSTEM
-   Inspired by "Where Creativity Meets Strategic" High-End Editorial Palette
-   Deep velvety obsidian black fading into ethereal misty steel-cyan & glacial glow.
-   Typography: Helvetica Neue / Helvetica / Clean Swiss Grotesque.
+   WINDGRID — CONCEPTUAL GARMIN PROTOTYPE GLASSMORPHISM & DESIGN SYSTEM
+   Inspired by the exact Garmin Connect Concept image:
+   - Gradient: Deepest dark graphite navy (#0a1017) to lightest misty ice-blue (#9eb4c5)
+   - Box & Glass: 24px radius, 16px blur, inset top highlight, 1px frosted boundary
+   - Font Style: Technical spaced monospace metadata, light-weight elegant numbers (300 weight), clean geometric headings
+   - Pixel Particle Background: Luminous blurred square pixels floating like wind
    ========================================================================== */
 
 :root {
-  /* Exact Cinematic Obsidian & Misty Steel-Cyan Canvas */
+  /* Exact Gradient with Lightest Shade & Darkest One */
   --bg-gradient: 
-    radial-gradient(ellipse at 88% 68%, rgba(88, 126, 152, 0.52) 0%, rgba(45, 70, 88, 0.35) 35%, transparent 70%),
-    radial-gradient(ellipse at 18% 85%, rgba(60, 88, 108, 0.26) 0%, transparent 50%),
-    radial-gradient(circle at 45% 0%, rgba(20, 28, 38, 0.9) 0%, transparent 65%),
-    #090d14;
-  --bg-canvas: #090d14;
+    radial-gradient(ellipse at 88% 18%, rgba(158, 180, 197, 0.62) 0%, rgba(88, 115, 136, 0.38) 40%, transparent 75%),
+    radial-gradient(ellipse at 15% 85%, rgba(10, 16, 24, 0.96) 0%, rgba(15, 24, 35, 0.82) 48%, transparent 80%),
+    linear-gradient(135deg, #0d1520 0%, #152230 35%, #243647 68%, #4a657a 100%);
+  --bg-canvas: #0d1520;
 
-  /* Low-Blur Frosted Glass Surfaces */
-  --glass-bg: rgba(15, 22, 32, 0.58);
-  --glass-bg-subtle: rgba(18, 27, 40, 0.42);
-  --glass-bg-hover: rgba(26, 38, 54, 0.70);
-  --glass-bg-active: rgba(35, 52, 72, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.13);
+  /* Exact Garmin Prototype Glassmorphism */
+  --glass-bg: rgba(13, 22, 33, 0.62);
+  --glass-bg-subtle: rgba(16, 27, 40, 0.44);
+  --glass-bg-hover: rgba(22, 36, 52, 0.72);
+  --glass-bg-active: rgba(30, 48, 68, 0.85);
+  
+  --glass-border: rgba(255, 255, 255, 0.15);
   --glass-border-subtle: rgba(255, 255, 255, 0.08);
-  --glass-border-glow: rgba(142, 192, 210, 0.45);
+  --glass-border-glow: rgba(158, 180, 197, 0.45);
 
-  /* Low Blur Setting */
-  --glass-blur: blur(8px);
-  --glass-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
-  --glass-shadow-hover: 0 16px 44px 0 rgba(0, 0, 0, 0.55), 0 0 24px 0 rgba(142, 192, 210, 0.16), inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
+  /* Exact Glass Blur & Inset Highlight */
+  --glass-blur: blur(16px);
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
+  --glass-shadow-hover: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 24px rgba(158, 180, 197, 0.18), inset 0 1px 0 0 rgba(255, 255, 255, 0.32);
 
-  /* Stark White & Misty Cool Slate Typography */
+  /* Exact Typography Palette */
   --text-primary: #ffffff;
   --text-secondary: #c5d5e2;
   --text-muted: #8ea3b4;
   --text-faint: #5d7384;
 
-  /* Atmospheric Tints */
-  --accent-mist: #e1ebf2;
-  --accent-steel: #8ec0d2;
-  --accent-steel-soft: rgba(142, 192, 210, 0.18);
-  --accent-cyan: #72b2c9;
+  /* Garmin Concept Accent Indicators */
+  --accent-green: #34d399;
+  --accent-green-soft: rgba(52, 211, 153, 0.16);
+  --accent-blue: #60a5fa;
+  --accent-blue-soft: rgba(96, 165, 250, 0.18);
+  --accent-ice: #9eb4c5;
+  --accent-ice-soft: rgba(158, 180, 197, 0.22);
   --accent-amber: #fcd34d;
   --accent-amber-soft: rgba(252, 211, 77, 0.18);
 
-  /* Strict Helvetica Typography */
-  --font-helvetica: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Fonts */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: "SF Mono", "JetBrains Mono", Menlo, Monaco, Consolas, monospace;
 
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+  /* Exact Rounded Box Radii */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
   --radius-pill: 9999px;
 }
 
@@ -60,7 +65,7 @@
 }
 
 body {
-  font-family: var(--font-helvetica);
+  font-family: var(--font-sans);
   background: var(--bg-gradient);
   background-attachment: fixed;
   background-color: var(--bg-canvas);
@@ -74,12 +79,13 @@ body {
 /* Micro Typography Helpers */
 .mono { font-family: var(--font-mono); }
 .tabular { font-variant-numeric: tabular-nums; }
-.tracking-tight { letter-spacing: -0.03em; }
-.tracking-wide { letter-spacing: 0.12em; }
+.tracking-tight { letter-spacing: -0.02em; }
+.tracking-wide { letter-spacing: 0.16em; }
 .uppercase-label {
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
@@ -93,7 +99,7 @@ body {
   z-index: 1;
 }
 
-/* Top Subtle Editorial Ambient Bar */
+/* Exact Top Ambient Header */
 .top-ambient-bar {
   display: flex;
   justify-content: space-between;
@@ -101,12 +107,13 @@ body {
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
-  padding: 14px 32px 0 32px;
-  font-size: 10px;
-  font-weight: 700;
+  padding: 16px 32px 0 32px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: #a4b8c8;
 }
 
 .ambient-tag {
@@ -116,7 +123,7 @@ body {
 }
 
 .ambient-cross {
-  color: var(--accent-steel);
+  color: var(--accent-blue);
   font-weight: 400;
 }
 
@@ -160,18 +167,19 @@ body {
 }
 
 .brand-main-title {
-  font-family: var(--font-helvetica);
+  font-family: var(--font-sans);
   font-size: 19px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #ffffff;
-  text-shadow: 0 0 20px rgba(142, 192, 210, 0.35);
+  text-shadow: 0 0 20px rgba(158, 180, 197, 0.4);
 }
 
 .brand-sub-label {
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -201,35 +209,35 @@ body {
 .glass-pill-control:hover {
   background: var(--glass-bg-hover);
   border-color: var(--glass-border-glow);
-  box-shadow: 0 0 14px rgba(142, 192, 210, 0.22);
+  box-shadow: 0 0 14px rgba(158, 180, 197, 0.25);
 }
 
 .glass-pill-control input,
 .glass-pill-control select {
   background: transparent;
   border: none;
-  font-family: var(--font-helvetica);
+  font-family: var(--font-sans);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   color: #ffffff;
   outline: none;
   cursor: pointer;
 }
 
 .glass-pill-control select option {
-  background: #0f1722;
+  background: #0d1622;
   color: #ffffff;
 }
 
-/* Crisp Pale Mist Active Pill (Exact "Book A Call" / "Contact Us" Style) */
+/* Date Preset Pills */
 .date-preset-pill {
   background: var(--glass-bg-subtle);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-pill);
   padding: 6px 14px;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-secondary);
   cursor: pointer;
@@ -243,10 +251,10 @@ body {
 }
 
 .date-preset-pill.active {
-  background: #e1ebf2;
-  color: #0b1118;
+  background: #ffffff;
+  color: #0d1520;
   border-color: #ffffff;
-  box-shadow: 0 2px 12px rgba(225, 235, 242, 0.35);
+  box-shadow: 0 2px 14px rgba(255, 255, 255, 0.4);
 }
 
 /* Navigation Tabs */
@@ -264,10 +272,10 @@ body {
   border: 1px solid transparent;
   border-radius: var(--radius-pill);
   padding: 6px 16px;
-  font-family: var(--font-helvetica);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
   cursor: pointer;
@@ -282,10 +290,10 @@ body {
 }
 
 .nav-glass-tab.active {
-  background: rgba(45, 68, 88, 0.45);
+  background: rgba(158, 180, 197, 0.18);
   color: #ffffff;
-  border: 1px solid rgba(142, 192, 210, 0.4);
-  box-shadow: 0 0 16px rgba(142, 192, 210, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* Main Content Container */
@@ -318,21 +326,21 @@ body {
 }
 
 .editorial-index-label {
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--accent-steel);
+  color: var(--accent-blue);
 }
 
 .editorial-title {
-  font-family: var(--font-helvetica);
-  font-size: 34px;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   color: #ffffff;
-  line-height: 1.1;
+  line-height: 1.15;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
 }
 
@@ -362,7 +370,7 @@ body {
 
 .editorial-meta-box strong {
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 /* Minimalist Glass Card */
@@ -389,6 +397,7 @@ body {
   gap: 20px;
 }
 
+/* Exact Garmin Concept Card */
 .kpi-glass-card {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
@@ -419,19 +428,22 @@ body {
 }
 
 .kpi-title {
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--accent-blue);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .kpi-tag-code {
   font-size: 10px;
   font-family: var(--font-mono);
-  color: var(--accent-steel);
-  letter-spacing: 0.05em;
-  opacity: 0.85;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
 }
 
 .kpi-val-row {
@@ -440,21 +452,21 @@ body {
   gap: 8px;
 }
 
+/* Exact Light Elegant Figures (Like 2:51:00 in Garmin Concept) */
 .kpi-hero-number {
-  font-family: var(--font-helvetica);
-  font-size: 38px;
-  font-weight: 900;
-  letter-spacing: -0.04em;
+  font-family: var(--font-sans);
+  font-size: 42px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
   color: #ffffff;
   line-height: 1;
-  text-shadow: 0 0 24px rgba(142, 192, 210, 0.25);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.3);
 }
 
 .kpi-unit-label {
   font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-weight: 400;
+  letter-spacing: 0.04em;
   color: var(--text-muted);
 }
 
@@ -470,9 +482,10 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 4px 12px;
   border-radius: var(--radius-pill);
@@ -486,17 +499,17 @@ body {
 }
 
 .status-pill.pill-blue {
-  background: var(--accent-steel-soft);
-  color: #8ec0d2;
-  border: 1px solid rgba(142, 192, 210, 0.35);
-  box-shadow: 0 0 10px rgba(142, 192, 210, 0.15);
+  background: var(--accent-blue-soft);
+  color: #7dd3fc;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.15);
 }
 
 .status-pill.pill-teal {
-  background: rgba(225, 235, 242, 0.15);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.12);
+  background: var(--accent-green-soft);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.15);
 }
 
 /* Glass Chart Box */
@@ -522,11 +535,10 @@ body {
 }
 
 .chart-heading-title {
-  font-family: var(--font-helvetica);
-  font-size: 16px;
-  font-weight: 800;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
   letter-spacing: -0.01em;
-  text-transform: uppercase;
   color: #ffffff;
 }
 
@@ -540,8 +552,9 @@ body {
   display: flex;
   align-items: center;
   gap: 20px;
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-secondary);
@@ -558,22 +571,23 @@ body {
 /* Tooltip */
 .glass-editorial-tooltip {
   background: rgba(13, 20, 29, 0.94);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(142, 192, 210, 0.3);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(158, 180, 197, 0.35);
   border-radius: var(--radius-md);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(142, 192, 210, 0.15);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(158, 180, 197, 0.15);
   padding: 12px 16px;
   font-size: 12px;
   min-width: 190px;
 }
 
 .tooltip-top-label {
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent-steel);
+  color: var(--accent-blue);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 6px;
   margin-bottom: 6px;
@@ -588,7 +602,7 @@ body {
 }
 
 .tooltip-row-item strong {
-  font-weight: 800;
+  font-weight: 600;
   color: #ffffff;
 }
 
@@ -625,11 +639,10 @@ body {
 }
 
 .table-card-title {
-  font-family: var(--font-helvetica);
-  font-size: 15px;
-  font-weight: 800;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
   letter-spacing: -0.01em;
-  text-transform: uppercase;
   color: #ffffff;
 }
 
@@ -646,14 +659,15 @@ table.editorial-table {
 }
 
 table.editorial-table th {
-  background: rgba(16, 25, 36, 0.88);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.10em;
+  background: rgba(16, 26, 38, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent-steel);
+  color: var(--accent-blue);
   padding: 12px 24px;
   position: sticky;
   top: 0;
@@ -668,7 +682,7 @@ table.editorial-table td {
 }
 
 table.editorial-table tbody tr:hover td {
-  background: rgba(142, 192, 210, 0.12);
+  background: rgba(158, 180, 197, 0.12);
   color: #ffffff;
 }
 
@@ -678,10 +692,10 @@ table.editorial-table tbody tr:hover td {
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-pill);
   padding: 5px 14px;
-  font-family: var(--font-helvetica);
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #ffffff;
   cursor: pointer;
@@ -689,10 +703,10 @@ table.editorial-table tbody tr:hover td {
 }
 
 .btn-editorial-inspect:hover {
-  background: #e1ebf2;
-  color: #0b1118;
+  background: #ffffff;
+  color: #0d1520;
   border-color: #ffffff;
-  box-shadow: 0 0 14px rgba(225, 235, 242, 0.35);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.4);
 }
 
 /* Footer */
@@ -712,14 +726,14 @@ table.editorial-table tbody tr:hover td {
 }
 
 .footer-link {
-  color: var(--accent-steel);
+  color: var(--accent-blue);
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.04em;
   transition: all 0.15s ease;
 }
 
 .footer-link:hover {
   color: #ffffff;
-  text-shadow: 0 0 10px rgba(142, 192, 210, 0.5);
+  text-shadow: 0 0 10px rgba(158, 180, 197, 0.5);
 }

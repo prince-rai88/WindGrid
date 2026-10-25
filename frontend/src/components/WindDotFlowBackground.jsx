@@ -2,23 +2,27 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 /**
- * Creates a circular soft dot texture for Three.js points
+ * Creates a soft-blurred square pixel texture for Three.js points
+ * Matches the user request: "make the dot animation in bg as pixels not dots but maintaining the blur"
  */
-function createCircleDotTexture() {
+function createBlurredPixelTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 64;
   canvas.height = 64;
   const ctx = canvas.getContext('2d');
 
-  const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-  gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-  gradient.addColorStop(0.4, 'rgba(255, 255, 255, 0.8)');
-  gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  // Outer soft pixel blur glow
+  ctx.shadowColor = 'rgba(215, 235, 250, 0.85)';
+  ctx.shadowBlur = 10;
 
-  ctx.fillStyle = gradient;
-  ctx.beginPath();
-  ctx.arc(32, 32, 30, 0, Math.PI * 2);
-  ctx.fill();
+  // Luminous core square pixel
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+  ctx.fillRect(16, 16, 32, 32);
+
+  // Soft atmospheric outer border
+  ctx.strokeStyle = 'rgba(175, 215, 240, 0.35)';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(14, 14, 36, 36);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.needsUpdate = true;
@@ -48,7 +52,7 @@ export const WindDotFlowBackground = () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // 2. Wind Flow Particle Grid
+    // 2. Wind Flow Pixel Grid
     const ROWS = 65;
     const COLS = 65;
     const TOTAL_POINTS = ROWS * COLS;
@@ -84,14 +88,14 @@ export const WindDotFlowBackground = () => {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-    // 3. Low-Opacity Frosted Glacial Dot Material
-    const dotTexture = createCircleDotTexture();
+    // 3. Low-Opacity Blurred Pixel Material
+    const pixelTexture = createBlurredPixelTexture();
     const material = new THREE.PointsMaterial({
-      size: 4.8,
-      map: dotTexture,
+      size: 5.2,
+      map: pixelTexture,
       transparent: true,
-      opacity: 0.22, // Low opacity as explicitly requested
-      color: 0xd8eaf2,
+      opacity: 0.22, // Low opacity maintaining blur
+      color: 0xd6e8f5,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
@@ -107,7 +111,6 @@ export const WindDotFlowBackground = () => {
     const mouseIntersection = new THREE.Vector3();
 
     const handleMouseMove = (event) => {
-      // Normalized device coordinates (-1 to +1)
       mouse.targetX = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.targetY = -(event.clientY / window.innerHeight) * 2 + 1;
     };
@@ -153,11 +156,10 @@ export const WindDotFlowBackground = () => {
           const dx = origX - mouseIntersection.x;
           const dz = origZ - mouseIntersection.z;
           const distSq = dx * dx + dz * dz;
-          const interactionRadiusSq = 90 * 90; // ~90 world units radius
+          const interactionRadiusSq = 90 * 90;
 
           if (distSq < interactionRadiusSq) {
             const factor = 1 - Math.sqrt(distSq) / 90;
-            // Lift particles upwards creating an interactive wind vortex
             targetY += factor * 28;
           }
         }
@@ -197,7 +199,7 @@ export const WindDotFlowBackground = () => {
       }
       geometry.dispose();
       material.dispose();
-      dotTexture.dispose();
+      pixelTexture.dispose();
       renderer.dispose();
     };
   }, []);
